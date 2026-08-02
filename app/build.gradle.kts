@@ -4,11 +4,7 @@ plugins {
 
 android {
     namespace = "iss.nus.edu.sg.smartmartdeliveryapp"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "iss.nus.edu.sg.smartmartdeliveryapp"
@@ -30,6 +26,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+    buildFeatures {
+        viewBinding = true
     }
 }
 
