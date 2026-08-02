@@ -1,4 +1,4 @@
-package iss.nus.edu.sg.smartmartdeliveryapp
+package iss.nus.edu.sg.smartmartdeliveryapp.activity
 
 import android.os.Bundle
 import android.widget.Toast
