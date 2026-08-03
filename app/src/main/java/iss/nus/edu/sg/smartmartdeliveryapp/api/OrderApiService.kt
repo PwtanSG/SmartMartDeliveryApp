@@ -6,7 +6,7 @@ import retrofit2.http.Path
 
 interface OrderApiService {
 
-    @GET("api/orders/assigned/{deliveryPersonId}")
+    @GET("api/assigned/{deliveryPersonId}")
     suspend fun getAssignedOrders(
         @Path("deliveryPersonId")
         deliveryPersonId: Long

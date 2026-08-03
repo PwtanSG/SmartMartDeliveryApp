@@ -1,5 +1,5 @@
 package iss.nus.edu.sg.smartmartdeliveryapp.adapter
-import android.app.Activity
+
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -13,32 +13,64 @@ import iss.nus.edu.sg.smartmartdeliveryapp.R
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderResponse
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderStatus
 
-class OrderAdapter(private val context: Context,
-                    private val records: List<OrderResponse>
+class OrderAdapter(
+    context: Context,
+    private val records: MutableList<OrderResponse>
+) : ArrayAdapter<OrderResponse>(
+    context,
+    R.layout.job_row,
+    records
+) {
 
-) : ArrayAdapter<Any?> (
-    context, R.layout.job_row
-){
-    init {
-        addAll(*arrayOfNulls<Any>(records.size))
-    }
+    override fun getView(
+        position: Int,
+        convertView: View?,
+        parent: ViewGroup
+    ): View {
+        val rowView = convertView
+            ?: LayoutInflater.from(context).inflate(
+                R.layout.job_row,
+                parent,
+                false
+            )
 
-    override fun getView(pos: Int, view: View?, parent: ViewGroup): View {
-        var _view = view
+        val order = getItem(position)
+            ?: return rowView
 
-        if (_view == null) {
-            val inflater = context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            _view = inflater.inflate(R.layout.job_row, parent, false)
-        }
+        val tvTrackingNo =
+            rowView.findViewById<TextView>(
+                R.id.tvTrackingNo
+            )
 
-        val record = records[pos]
-        // set the text for TextView
-        val btnStatus = _view.findViewById<Button>(R.id.btnStatus)
-        val textViewTrackingNo = _view.findViewById<TextView>(R.id.tvTrackingNo)
-        textViewTrackingNo.text = record.trackingNo
+        val tvRecipientName =
+            rowView.findViewById<TextView>(
+                R.id.tvRecipentName
+            )
 
+        val tvRecipientPhone =
+            rowView.findViewById<TextView>(
+                R.id.tvRecipentPhone
+            )
 
-        when (record.status) {
+        val tvRecipientAddress =
+            rowView.findViewById<TextView>(
+                R.id.tvRecipentAddress
+            )
+
+        val btnStatus =
+            rowView.findViewById<Button>(
+                R.id.btnStatus
+            )
+
+        tvTrackingNo.text = order.trackingNo
+
+        // Temporary values until they come from the API
+        tvRecipientName.text = "Alice Tay"
+        tvRecipientPhone.text = "91231234"
+        tvRecipientAddress.text =
+            "123 Orchard Rd #12-12 S123321"
+
+        when (order.status) {
             OrderStatus.PACKED -> {
                 btnStatus.text = "Packed"
                 btnStatus.isEnabled = true
@@ -58,18 +90,19 @@ class OrderAdapter(private val context: Context,
             }
 
             else -> {
-                btnStatus.text = record.status.name
+                btnStatus.text = order.status.name
                 btnStatus.isEnabled = false
+                btnStatus.setBackgroundColor(Color.LTGRAY)
             }
         }
 
         btnStatus.setOnClickListener {
             Toast.makeText(
                 context,
-                "Btn Pressed ${record.trackingNo} ${record.status}",
+                "Btn Pressed ${order.trackingNo} ${order.status}",
                 Toast.LENGTH_SHORT
             ).show()
         }
-        return _view
+        return rowView
     }
 }
