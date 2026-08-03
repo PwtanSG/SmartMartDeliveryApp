@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Author Tan Pang Wee -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_marginTop="50dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Main content -->
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:paddingTop="20dp"
+        android:dividerHeight="1dp"/>
+
+    <TextView
+        android:id="@+id/txtViewNoRecords"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No Record"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="18sp" />
+
+    <FrameLayout
+        android:id="@+id/btnBack"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="20dp"
+        android:background="@android:color/transparent">
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/btnFilter"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="20dp"
+        android:background="@android:color/transparent">
+
+    </FrameLayout>
+    <!-- Loading overlay -->
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#20000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+</FrameLayout>

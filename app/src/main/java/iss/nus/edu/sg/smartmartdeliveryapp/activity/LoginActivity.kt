@@ -1,5 +1,6 @@
 package iss.nus.edu.sg.smartmartdeliveryapp.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -51,5 +52,6 @@ class LoginActivity : AppCompatActivity() {
         ).show()
 
         // Call Spring Boot using Retrofit here.
+        startActivity(Intent(this, ListViewActivity::class.java))
     }
 }
