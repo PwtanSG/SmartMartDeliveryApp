@@ -4,5 +4,6 @@ data class OrderResponse(
     val id: Long,
     val trackingNo: String,
     val deliveryPersonId: Long?,
-    val status: OrderStatus
+    val status: OrderStatus,
+    val deliveredAt: String? = null
 )

@@ -11,10 +11,13 @@ import androidx.lifecycle.lifecycleScope
 import iss.nus.edu.sg.smartmartdeliveryapp.R
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderResponse
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderStatus
-import iss.nus.edu.sg.smartmartdeliveryapp.adapter.OrderAdapter
+
 import iss.nus.edu.sg.smartmartdeliveryapp.api.RetrofitClient
 import kotlinx.coroutines.launch
 import android.util.Log
+import android.widget.TextView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import iss.nus.edu.sg.smartmartdeliveryapp.adapter.OrderAdapter
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -25,26 +28,59 @@ class ListViewActivity :
     private lateinit var listView: ListView
     private lateinit var orderAdapter: OrderAdapter
 
+    private val allRecords =
+        mutableListOf<OrderResponse>()
+
     private val records =
         mutableListOf<OrderResponse>()
+
+    private lateinit var bottomNavigation: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_list_view)
 
-        listView = findViewById(R.id.listView)
+        listView = findViewById<ListView>(R.id.listView)
+
+        bottomNavigation = findViewById(R.id.bottomNavigation)
+
         orderAdapter = OrderAdapter(
             this,
             records
         )
+
         listView.adapter = orderAdapter
         listView.onItemClickListener = this
 
-        loadRecords()
+        bottomNavigation.setOnItemSelectedListener {
+                menuItem ->
+
+            Log.d(
+                "BOTTOM_NAV",
+                "Selected item: ${menuItem.itemId}"
+            )
+
+            when (menuItem.itemId) {
+                R.id.navInProgress -> {
+                    loadRecords(completed = false)
+                    true
+                }
+
+                R.id.navCompleted -> {
+                    loadRecords(completed = true)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        // Load API data after views and adapter are ready
+        loadRecords(completed = false)
     }
 
-    private fun loadRecords() {
+    private fun loadRecords(completed: Boolean) {
         showLoading(true)
 
         lifecycleScope.launch {
@@ -52,14 +88,18 @@ class ListViewActivity :
                 Log.d("ORDER_API", "Request started")
 
                 val response =
-                    RetrofitClient.orderApi
-                        .getAssignedOrders(1L)
+                    if (completed) {
+                        RetrofitClient.orderApi
+                            .getCompletedOrders(1L)
+                    } else {
+                        RetrofitClient.orderApi
+                            .getInProgressOrders(1L)
+                    }
 
                 Log.d(
                     "ORDER_API",
                     "Received ${response.size} orders: $response"
                 )
-
                 records.clear()
                 records.addAll(response)
 
@@ -72,6 +112,18 @@ class ListViewActivity :
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+
+                val tvNoRecords =
+                    findViewById<TextView>(
+                        R.id.txtViewNoRecords
+                    )
+
+                tvNoRecords.visibility =
+                    if (records.isEmpty()) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
             } catch (e: HttpException) {
                 Log.e(
                     "ORDER_API",

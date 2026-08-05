@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navInProgress"
+        android:icon="@drawable/outline_delivery_truck_speed_24"
+        android:title="In Progress" />
+
+    <item
+        android:id="@+id/navCompleted"
+        android:icon="@drawable/outline_check_circle_24"
+        android:title="Completed" />
+
+</menu>

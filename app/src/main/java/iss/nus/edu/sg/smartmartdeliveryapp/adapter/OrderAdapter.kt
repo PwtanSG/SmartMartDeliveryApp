@@ -86,7 +86,7 @@ class OrderAdapter(
             OrderStatus.DELIVERED -> {
                 btnStatus.text = "Delivered"
                 btnStatus.isEnabled = false
-                btnStatus.setBackgroundColor(Color.LTGRAY)
+                btnStatus.setBackgroundColor(Color.GRAY)
             }
 
             else -> {
