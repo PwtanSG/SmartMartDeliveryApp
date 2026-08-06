@@ -26,7 +26,7 @@
         android:textColor="#0000FF"
         android:textSize="22sp"
         android:textStyle="bold|italic"
-        android:gravity="center"
+        android:gravity="center_vertical|left"
         android:padding="16dp" />
 
     <TextView
@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:text="Alice Tay"
         android:textSize="18sp"
+        android:gravity="center_vertical|left"
         android:padding="16dp" />
 
     <TextView
@@ -43,6 +44,7 @@
         android:layout_height="wrap_content"
         android:text="91231234"
         android:textSize="18sp"
+        android:gravity="center_vertical|left"
         android:padding="16dp" />
 
     <TextView
@@ -51,6 +53,7 @@
         android:layout_height="wrap_content"
         android:text="123 Orchard Road S123321"
         android:textSize="18sp"
+        android:gravity="center_vertical|left"
         android:padding="16dp" />
 
     <Button

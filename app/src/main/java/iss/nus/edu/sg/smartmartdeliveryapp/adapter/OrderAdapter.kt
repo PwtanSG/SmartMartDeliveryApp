@@ -12,6 +12,7 @@ import android.widget.Toast
 import iss.nus.edu.sg.smartmartdeliveryapp.R
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderResponse
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderStatus
+import android.content.res.ColorStateList
 
 class OrderAdapter(
     context: Context,
@@ -70,30 +71,70 @@ class OrderAdapter(
         tvRecipientAddress.text =
             "123 Orchard Rd #12-12 S123321"
 
+//        when (order.status) {
+//            OrderStatus.PACKED -> {
+//                btnStatus.text = "Packed"
+//                btnStatus.isEnabled = true
+//                btnStatus.setBackgroundColor(Color.parseColor("#198754"))
+//            }
+//
+//            OrderStatus.PICKED_UP -> {
+//                btnStatus.text = "Picked Up"
+//                btnStatus.isEnabled = true
+//                btnStatus.setBackgroundColor(Color.parseColor("#FFBF00"))
+//            }
+//
+//            OrderStatus.DELIVERED -> {
+//                btnStatus.text = "Delivered"
+//                btnStatus.isEnabled = false
+//                btnStatus.setBackgroundColor(Color.GRAY)
+//            }
+//
+//            else -> {
+//                btnStatus.text = order.status.name
+//                btnStatus.isEnabled = false
+//                btnStatus.setBackgroundColor(Color.LTGRAY)
+//            }
+//        }
+
         when (order.status) {
             OrderStatus.PACKED -> {
                 btnStatus.text = "Packed"
+                btnStatus.setTextColor(Color.WHITE)
+                btnStatus.backgroundTintList =
+                    ColorStateList.valueOf(
+                        Color.parseColor("#6A4FB3")
+                    )
                 btnStatus.isEnabled = true
-                btnStatus.setBackgroundColor(Color.parseColor("#198754"))
+                btnStatus.isClickable = true
             }
 
             OrderStatus.PICKED_UP -> {
                 btnStatus.text = "Picked Up"
+                btnStatus.setTextColor(Color.WHITE)
+                btnStatus.backgroundTintList =
+                    ColorStateList.valueOf(
+                        Color.parseColor("#EF6C00")
+                    )
                 btnStatus.isEnabled = true
-                btnStatus.setBackgroundColor(Color.parseColor("#FFBF00"))
+                btnStatus.isClickable = true
             }
 
             OrderStatus.DELIVERED -> {
                 btnStatus.text = "Delivered"
+                btnStatus.setTextColor(Color.WHITE)
+                btnStatus.backgroundTintList =
+                    ColorStateList.valueOf(
+                        Color.parseColor("#6B6670")
+                    )
+
+                // Keep enabled to prevent Android fading the colour
                 btnStatus.isEnabled = false
-                btnStatus.setBackgroundColor(Color.GRAY)
+                btnStatus.isClickable = false
+                btnStatus.isFocusable = false
             }
 
-            else -> {
-                btnStatus.text = order.status.name
-                btnStatus.isEnabled = false
-                btnStatus.setBackgroundColor(Color.LTGRAY)
-            }
+            else -> Unit
         }
 
         btnStatus.setOnClickListener {

@@ -54,18 +54,21 @@ class WorkflowActivity : AppCompatActivity() {
         cancel_btn.setOnClickListener {
             startActivity(Intent(this, ListViewActivity::class.java))
         }
+        val btnScan = findViewById<Button>(R.id.btnScan)
+//        btnScan.setOnClickListener {
+//            scanOrder()
+//        }
+//        btnScan.setOnClickListener()
+        btnScan.visibility = View.VISIBLE
 
-//        val btnScan = findViewById<Button>(R.id.btnScan)
-//        btnScan.visibility = View.VISIBLE
-//
-//        val btnButton = findViewById<Button>(R.id.button)
-//        btnButton.visibility = View.GONE
+        val btnButton = findViewById<Button>(R.id.button)
+        btnButton.visibility = View.GONE
 
         val orderId =
             intent.getLongExtra("ORDER_ID", -1L)
 
         val trackingNo =
-            intent.getStringExtra("TRACKING_NO")
+            intent.getStringExtra("TRACKING_NO") ?: ""
 
         val deliveryPersonId =
             intent.getLongExtra(
@@ -78,6 +81,10 @@ class WorkflowActivity : AppCompatActivity() {
 
         val statusName =
             intent.getStringExtra("ORDER_STATUS")
+
+        btnScan.setOnClickListener {
+            scanOrder(trackingNo, deliveryPersonId)
+        }
 
         val btn = findViewById<Button>(R.id.button)
         when (statusName) {
@@ -366,12 +373,12 @@ class WorkflowActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
 
-//                val btnScan = findViewById<Button>(R.id.btnScan)
-//                btnScan.visibility = View.GONE
-//
-//                val btnButton = findViewById<Button>(R.id.button)
-//                btnButton.visibility = View.VISIBLE
-//
+                val btnScan = findViewById<Button>(R.id.btnScan)
+                btnScan.visibility = View.GONE
+
+                val btnButton = findViewById<Button>(R.id.button)
+                btnButton.visibility = View.VISIBLE
+
 //                confirmPickUp(
 //                    scannedTrackingNo,
 //                    deliveryPersonId
