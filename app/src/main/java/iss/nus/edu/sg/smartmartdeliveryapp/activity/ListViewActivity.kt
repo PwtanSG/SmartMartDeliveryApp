@@ -1,5 +1,6 @@
 package iss.nus.edu.sg.smartmartdeliveryapp.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -191,7 +192,30 @@ class ListViewActivity :
             "Selected ${selectedOrder.trackingNo}",
             Toast.LENGTH_SHORT
         ).show()
+
+        val intent = Intent(
+            this,
+            WorkflowActivity::class.java
+        ).apply {
+            putExtra("ORDER_ID", selectedOrder.id)
+            putExtra(
+                "TRACKING_NO",
+                selectedOrder.trackingNo
+            )
+            putExtra(
+                "DELIVERY_PERSON_ID",
+                selectedOrder.deliveryPersonId
+            )
+            putExtra(
+                "ORDER_STATUS",
+                selectedOrder.status.name
+            )
+        }
+        startActivity(intent)
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        loadRecords(completed = false)
+    }
 }

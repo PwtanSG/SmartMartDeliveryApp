@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Username"
+        android:text="alice"
         android:inputType="textPersonName"
         android:padding="14dp"
         android:layout_marginBottom="16dp" />
@@ -35,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
+        android:text="password"
         android:inputType="textPassword"
         android:padding="14dp" />
 
