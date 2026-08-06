@@ -1,6 +1,7 @@
 package iss.nus.edu.sg.smartmartdeliveryapp.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -105,6 +106,18 @@ class ListViewActivity :
                 records.addAll(response)
 
                 orderAdapter.notifyDataSetChanged()
+
+                if (completed) {
+                    updateBadge(
+                        R.id.navCompleted,
+                        response.size
+                    )
+                } else {
+                    updateBadge(
+                        R.id.navInProgress,
+                        response.size
+                    )
+                }
 
                 if (response.isEmpty()) {
                     Toast.makeText(
@@ -217,5 +230,56 @@ class ListViewActivity :
     override fun onResume() {
         super.onResume()
         loadRecords(completed = false)
+        loadNavigationCounts()
+    }
+
+    private fun updateBadge(
+        menuItemId: Int,
+        count: Int
+    ) {
+        if (count > 0) {
+            val badge =
+                bottomNavigation.getOrCreateBadge(
+                    menuItemId
+                )
+
+            badge.isVisible = true
+            badge.number = count
+            badge.backgroundColor =
+                Color.parseColor("#6A4FB3")
+            badge.badgeTextColor = Color.WHITE
+        } else {
+            bottomNavigation.removeBadge(menuItemId)
+        }
+    }
+
+    private fun loadNavigationCounts() {
+        lifecycleScope.launch {
+            try {
+                val inProgressOrders =
+                    RetrofitClient.orderApi
+                        .getInProgressOrders(1L)
+
+                val completedOrders =
+                    RetrofitClient.orderApi
+                        .getCompletedOrders(1L)
+
+                updateBadge(
+                    R.id.navInProgress,
+                    inProgressOrders.size
+                )
+
+                updateBadge(
+                    R.id.navCompleted,
+                    completedOrders.size
+                )
+            } catch (e: Exception) {
+                Log.e(
+                    "ORDER_COUNT",
+                    "Unable to load order counts",
+                    e
+                )
+            }
+        }
     }
 }
