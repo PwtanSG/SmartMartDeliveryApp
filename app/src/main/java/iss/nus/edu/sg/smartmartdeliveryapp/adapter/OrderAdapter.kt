@@ -69,7 +69,7 @@ class OrderAdapter(
         tvRecipientName.text = "Alice Tay"
         tvRecipientPhone.text = "91231234"
         tvRecipientAddress.text =
-            "123 Orchard Rd #12-12 S123321"
+            "2 Clementi West Street 2 129605"
 
 //        when (order.status) {
 //            OrderStatus.PACKED -> {

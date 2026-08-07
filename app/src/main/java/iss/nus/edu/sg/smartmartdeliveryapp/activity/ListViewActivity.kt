@@ -223,6 +223,10 @@ class ListViewActivity :
                 "ORDER_STATUS",
                 selectedOrder.status.name
             )
+            putExtra(
+                "RECIPIENT_ADDRESS",
+                "2 Clementi West Street 2 129605"
+            )
         }
         startActivity(intent)
     }

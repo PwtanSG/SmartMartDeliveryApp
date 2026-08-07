@@ -69,6 +69,18 @@
         android:backgroundTint="#6A4FB3" />
 
     <Button
+        android:id="@+id/btnMap"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:text="Map"
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        android:visibility="visible"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#6A4FB3" />
+
+    <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -79,12 +91,13 @@
         android:visibility="visible"
         android:textColor="@android:color/white"
         android:backgroundTint="#6A4FB3" />
+
     <Button
-        android:id="@+id/btnCancel"
+        android:id="@+id/btnBack"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_marginTop="24dp"
-        android:text="Cancel"
+        android:text="Back"
         android:textSize="18sp"
         android:textAllCaps="false"
         android:textColor="@android:color/white"

@@ -3,6 +3,7 @@ package iss.nus.edu.sg.smartmartdeliveryapp.activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -49,9 +50,40 @@ class WorkflowActivity : AppCompatActivity() {
                 scannerOptions
             )
 
-        val cancel_btn = findViewById<Button>(R.id.btnCancel)
-        cancel_btn.setBackgroundColor(Color.GRAY)
-        cancel_btn.setOnClickListener {
+        val btnMap = findViewById<Button>(R.id.btnMap)
+        btnMap.setOnClickListener {
+            val address =
+                intent.getStringExtra(
+                    "RECIPIENT_ADDRESS"
+                ) ?: ""
+
+            if (address.isBlank()) {
+                Toast.makeText(
+                    this,
+                    "Recipient address is missing",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                return@setOnClickListener
+            }
+
+            openNavigation(address)
+        }
+
+//        btnMap.setOnClickListener {
+//            openNavigation(
+//                "116 Lorong 2 Toa Payoh S310116"
+//            )
+//        }
+
+//        btnMap.setOnClickListener {
+//            showRecipientLocation(
+//                "2 Clementi West Street 2, Singapore 129605"
+//            )
+//        }
+        val back_btn = findViewById<Button>(R.id.btnBack)
+        back_btn.setBackgroundColor(Color.GRAY)
+        back_btn.setOnClickListener {
             startActivity(Intent(this, ListViewActivity::class.java))
         }
         val btnScan = findViewById<Button>(R.id.btnScan)
@@ -384,5 +416,59 @@ class WorkflowActivity : AppCompatActivity() {
 //                    deliveryPersonId
 //                )
             }
+    }
+
+    private fun openNavigation(
+        recipientAddress: String
+    ) {
+        val uri = Uri.parse(
+            "google.navigation:q=" +
+                    Uri.encode(recipientAddress) +
+                    "&mode=d"
+        )
+
+        val intent = Intent(
+            Intent.ACTION_VIEW,
+            uri
+        ).apply {
+            setPackage(
+                "com.google.android.apps.maps"
+            )
+        }
+
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        } else {
+            val browserUri = Uri.parse(
+                "https://www.google.com/maps/dir/?api=1" +
+                        "&destination=" +
+                        Uri.encode(recipientAddress)
+            )
+
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    browserUri
+                )
+            )
+        }
+    }
+
+    private fun showRecipientLocation(
+        recipientAddress: String
+    ) {
+        val uri = Uri.parse(
+            "geo:0,0?q=" +
+                    Uri.encode(recipientAddress)
+        )
+
+        val intent =
+            Intent(Intent.ACTION_VIEW, uri).apply {
+                setPackage(
+                    "com.google.android.apps.maps"
+                )
+            }
+
+        startActivity(intent)
     }
 }
