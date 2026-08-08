@@ -1,5 +1,6 @@
 package iss.nus.edu.sg.smartmartdeliveryapp.activity
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -12,15 +13,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import iss.nus.edu.sg.smartmartdeliveryapp.R
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderResponse
-import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderStatus
-
 import iss.nus.edu.sg.smartmartdeliveryapp.api.RetrofitClient
 import kotlinx.coroutines.launch
 import android.util.Log
-import android.util.Log.e
-import android.widget.Button
+import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
@@ -32,8 +29,6 @@ import retrofit2.HttpException
 import java.io.IOException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import org.w3c.dom.Text
-import kotlin.text.clear
 
 class ListViewActivity :
     AppCompatActivity(),
@@ -87,6 +82,32 @@ class ListViewActivity :
 
         tvCurrentDateTime =
             findViewById(R.id.tvCurrentDateTime)
+
+        val topRightAccount =
+            findViewById<FrameLayout>(R.id.btnAccount)
+
+        topRightAccount.setOnClickListener { anchorView ->
+            val popupMenu =
+                PopupMenu(this, anchorView)
+
+            popupMenu.menuInflater.inflate(
+                R.menu.profile_popup_menu,
+                popupMenu.menu
+            )
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.actionLogout -> {
+                        showLogoutConfirmation()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+
+            popupMenu.show()
+        }
 
         val scannerOptions =
             GmsBarcodeScannerOptions.Builder()
@@ -654,5 +675,29 @@ class ListViewActivity :
             "As of ${formatter.format(java.util.Date())}"
     }
 
+    private fun showLogoutConfirmation() {
+        AlertDialog.Builder(this)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to log out?")
+            .setPositiveButton("Logout") { _, _ ->
+                logout()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun logout() {
+        // Clear saved login token or delivery person details here.
+        // TokenManager.clearToken()
+
+        val intent =
+            Intent(this, LoginActivity::class.java).apply {
+                flags =
+                    Intent.FLAG_ACTIVITY_NEW_TASK or
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+
+        startActivity(intent)
+    }
     }
 

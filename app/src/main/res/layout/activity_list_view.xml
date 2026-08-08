@@ -3,12 +3,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
-    android:layout_marginTop="50dp"
+    android:layout_marginTop="10dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!-- Main content -->
-
 <!--    <ListView-->
 <!--        android:id="@+id/listView"-->
 <!--        android:layout_width="match_parent"-->
@@ -20,6 +19,7 @@
         android:id="@+id/dashboardContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="30dp"
         android:visibility="gone">
 
         <include
@@ -28,6 +28,14 @@
             android:layout_height="match_parent" />
 
     </FrameLayout>
+<!--    <com.google.android.material.appbar.MaterialToolbar-->
+<!--        android:id="@+id/topAppBar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:background="#F8F5FC"-->
+<!--        app:title=""-->
+<!--        app:titleTextColor="#342F3E"-->
+<!--        app:menu="@menu/top_app_menu" />-->
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
@@ -35,7 +43,7 @@
         android:layout_weight="1"
         android:background="#F8F7FB"
         android:clipToPadding="false"
-        android:paddingTop="8dp"
+        android:paddingTop="40dp"
         android:dividerHeight="1dp"
         android:paddingBottom="12dp"
         android:visibility="gone" />
@@ -62,25 +70,25 @@
         android:background="@android:color/transparent">
     </FrameLayout>
     <FrameLayout
-        android:id="@+id/btnFilter"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:id="@+id/btnAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="top|end"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
         android:clickable="true"
         android:focusable="true"
         android:elevation="20dp"
         android:background="@android:color/transparent">
 
         <ImageView
-            android:id="@+id/btnFilter1"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:id="@+id/btnAcc"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             android:layout_gravity="center"
-            android:src="@android:drawable/ic_menu_help"
+            android:src="@drawable/outline_account_circle_24"
             app:tint="@color/black"
-            android:visibility="gone"
+            android:visibility="visible"
             android:background="@android:color/transparent"/>
     </FrameLayout>
     <!-- Loading overlay -->
