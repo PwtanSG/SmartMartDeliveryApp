@@ -313,62 +313,6 @@ class WorkflowActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun scanOrder1(order: OrderResponse) {
-        barcodeScanner.startScan()
-            .addOnSuccessListener { barcode ->
-                val scannedTrackingNo =
-                    barcode.rawValue?.trim()
-
-                if (scannedTrackingNo.isNullOrBlank()) {
-                    Toast.makeText(
-                        this,
-                        "Barcode has no value",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    return@addOnSuccessListener
-                }
-
-                if (scannedTrackingNo == order.trackingNo) {
-//                    pickupOrder(order)
-                    Toast.makeText(
-                        this,
-                        "Wrong parcel. Expected ${order.trackingNo}, " +
-                                "but scanned $scannedTrackingNo",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Wrong parcel. Expected ${order.trackingNo}, " +
-                                "but scanned $scannedTrackingNo",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-            .addOnCanceledListener {
-                Toast.makeText(
-                    this,
-                    "Scanning cancelled",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            .addOnFailureListener { exception ->
-                Log.e(
-                    "BARCODE_SCANNER",
-                    "Scanning failed",
-                    exception
-                )
-
-                Toast.makeText(
-                    this,
-                    "Unable to scan barcode",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-    }
-
     private fun scanOrder(
         expectedTrackingNo: String,
         deliveryPersonId: Long
@@ -411,10 +355,6 @@ class WorkflowActivity : AppCompatActivity() {
                 val btnButton = findViewById<Button>(R.id.button)
                 btnButton.visibility = View.VISIBLE
 
-//                confirmPickUp(
-//                    scannedTrackingNo,
-//                    deliveryPersonId
-//                )
             }
     }
 

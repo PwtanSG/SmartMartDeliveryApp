@@ -11,4 +11,8 @@
         android:icon="@drawable/outline_check_circle_24"
         android:title="Completed" />
 
+    <item
+        android:id="@+id/navSearch"
+        android:icon="@drawable/outline_barcode_scanner_24"
+        android:title="Search" />
 </menu>

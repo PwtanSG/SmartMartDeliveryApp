@@ -40,4 +40,15 @@ interface OrderApiService {
     suspend fun deliveredOrder(
         @Body request: OrderRequest
     ): OrderResponse
+
+    @GET(
+        "api/orders/search/{trackingNo}/{deliveryPersonId}"
+    )
+    suspend fun searchOrder(
+        @Path("trackingNo")
+        trackingNo: String,
+
+        @Path("deliveryPersonId")
+        deliveryPersonId: Long
+    ): OrderResponse
 }
