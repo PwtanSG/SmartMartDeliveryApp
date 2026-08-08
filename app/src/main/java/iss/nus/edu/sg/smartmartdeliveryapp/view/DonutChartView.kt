@@ -74,7 +74,7 @@ class DonutChartView @JvmOverloads constructor(
                 chartPaint
             )
 
-            chartPaint.color = Color.parseColor("#198754")
+            chartPaint.color = Color.parseColor("#F0A331")
             canvas.drawArc(
                 chartBounds,
                 -90f + inProgressAngle,

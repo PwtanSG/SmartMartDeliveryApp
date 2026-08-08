@@ -114,7 +114,7 @@ class OrderAdapter(
                 btnStatus.setTextColor(Color.WHITE)
                 btnStatus.backgroundTintList =
                     ColorStateList.valueOf(
-                        Color.parseColor("#EF6C00")
+                        Color.parseColor("#F0A331")
                     )
                 btnStatus.isEnabled = true
                 btnStatus.isClickable = true
