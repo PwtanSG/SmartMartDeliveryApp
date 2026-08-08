@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/navDashboard"
+        android:icon="@drawable/outline_bar_chart_4_bars_24"
+        android:title="Dashboard" />
+
+    <item
         android:id="@+id/navInProgress"
         android:icon="@drawable/outline_delivery_truck_speed_24"
         android:title="In Progress" />

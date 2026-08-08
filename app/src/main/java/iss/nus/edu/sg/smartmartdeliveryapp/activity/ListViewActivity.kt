@@ -27,8 +27,12 @@ import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
 import iss.nus.edu.sg.smartmartdeliveryapp.adapter.OrderAdapter
+import iss.nus.edu.sg.smartmartdeliveryapp.view.DonutChartView
 import retrofit2.HttpException
 import java.io.IOException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import org.w3c.dom.Text
 import kotlin.text.clear
 
 class ListViewActivity :
@@ -48,10 +52,41 @@ class ListViewActivity :
 
     private lateinit var barcodeScanner: GmsBarcodeScanner
 
+    private lateinit var dashboardContainer: FrameLayout
+
+    private lateinit var tvInProgressCount: TextView
+    private lateinit var tvCompletedCount: TextView
+    private lateinit var donutChart: DonutChartView
+
+    private lateinit var tvNoRecord: TextView
+
+    private lateinit var tvCurrentDateTime: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_list_view)
+
+        dashboardContainer =
+            findViewById(R.id.dashboardContainer)
+        // default to first menu item
+        dashboardContainer.visibility = View.VISIBLE
+        loadDashboard()
+
+        tvInProgressCount =
+            findViewById(R.id.tvInProgressCount)
+
+        tvCompletedCount =
+            findViewById(R.id.tvCompletedCount)
+
+        donutChart =
+            findViewById(R.id.donutChart)
+
+        tvNoRecord =
+            findViewById<TextView>(R.id.txtViewNoRecords)
+
+        tvCurrentDateTime =
+            findViewById(R.id.tvCurrentDateTime)
 
         val scannerOptions =
             GmsBarcodeScannerOptions.Builder()
@@ -86,12 +121,8 @@ class ListViewActivity :
             if (menuItem.itemId == R.id.navSearch) {
                 records.clear()
                 orderAdapter.notifyDataSetChanged()
-                val tvNoRecords =
-                    findViewById<TextView>(
-                        R.id.txtViewNoRecords
-                    )
-                tvNoRecords.visibility = View.VISIBLE
-                tvNoRecords.text = "Click Search"
+                tvNoRecord.visibility = View.VISIBLE
+                tvNoRecord.text = "Click Search"
                 scanOrder()
             }
         }
@@ -106,26 +137,29 @@ class ListViewActivity :
 
             when (menuItem.itemId) {
                 R.id.navInProgress -> {
+                    showOrderList()
                     loadRecords(completed = false)
                     true
                 }
 
                 R.id.navCompleted -> {
+                    showOrderList()
                     loadRecords(completed = true)
                     true
                 }
 
                 R.id.navSearch -> {
+                    showOrderList()
                     records.clear()
                     orderAdapter.notifyDataSetChanged()
-                    val tvNoRecords =
-                        findViewById<TextView>(
-                            R.id.txtViewNoRecords
-                        )
-                    tvNoRecords.visibility = View.VISIBLE
-                    tvNoRecords.text = "Click Search"
+                    tvNoRecord.visibility = View.VISIBLE
+                    tvNoRecord.text = "Click Search"
                     scanOrder()
 //                    searchOrder("TRK-2026-0001", 1L)
+                    true
+                }
+                R.id.navDashboard -> {
+                    showDashboard()
                     true
                 }
                 else -> false
@@ -436,6 +470,9 @@ class ListViewActivity :
                         trackingNo + deliveryPersonId + "Order not found or not assigned to you : " + e.code() + e.message,
                         Toast.LENGTH_LONG
                     ).show()
+                    val tvtxtViewNoRecords = findViewById<TextView>(R.id.txtViewNoRecords)
+                    tvtxtViewNoRecords.visibility = View.VISIBLE
+                    tvtxtViewNoRecords.text = "${trackingNo} : \nRecord not found or not assigned to you"
                 } else {
                     Toast.makeText(
                         this@ListViewActivity,
@@ -534,6 +571,87 @@ class ListViewActivity :
             trackingNo = trackingNo,
             deliveryPersonId = 1L
         )
+    }
+
+    private fun showOrderList() {
+        dashboardContainer.visibility = View.GONE
+        tvNoRecord.visibility = View.GONE
+        listView.visibility = View.VISIBLE
+    }
+
+
+
+    private fun showDashboard() {
+        listView.visibility = View.GONE
+        tvNoRecord.visibility = View.GONE
+        dashboardContainer.visibility = View.VISIBLE
+
+        loadDashboard()
+    }
+
+    private fun loadDashboard() {
+        showLoading(true)
+
+        lifecycleScope.launch {
+            try {
+                val counts = coroutineScope {
+                    val inProgressRequest = async {
+                        RetrofitClient.orderApi
+                            .getInProgressOrders(1L)
+                    }
+
+                    val completedRequest = async {
+                        RetrofitClient.orderApi
+                            .getCompletedOrders(1L)
+                    }
+
+                    Pair(
+                        inProgressRequest.await().size,
+                        completedRequest.await().size
+                    )
+                }
+
+                val inProgressCount = counts.first
+                val completedCount = counts.second
+
+                tvInProgressCount.text =
+                    inProgressCount.toString()
+
+                tvCompletedCount.text =
+                    completedCount.toString()
+
+                donutChart.setData(
+                    inProgress = inProgressCount,
+                    completed = completedCount
+                )
+                displayCurrentDateTime()
+            } catch (e: Exception) {
+                Log.e(
+                    "DASHBOARD_API",
+                    "Failed to load dashboard",
+                    e
+                )
+
+                Toast.makeText(
+                    this@ListViewActivity,
+                    "Unable to load dashboard",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } finally {
+                showLoading(false)
+            }
+        }
+    }
+
+    private fun displayCurrentDateTime() {
+        val formatter =
+            java.text.SimpleDateFormat(
+                "d MMM yyyy, h:mm a",
+                java.util.Locale.getDefault()
+            )
+
+        tvCurrentDateTime.text =
+            "As of ${formatter.format(java.util.Date())}"
     }
 
     }
