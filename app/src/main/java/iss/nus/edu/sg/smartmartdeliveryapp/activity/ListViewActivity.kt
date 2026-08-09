@@ -16,9 +16,11 @@ import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderResponse
 import iss.nus.edu.sg.smartmartdeliveryapp.api.RetrofitClient
 import kotlinx.coroutines.launch
 import android.util.Log
+import android.view.Gravity
 import android.widget.PopupMenu
 import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
@@ -87,13 +89,23 @@ class ListViewActivity :
             findViewById<FrameLayout>(R.id.btnAccount)
 
         topRightAccount.setOnClickListener { anchorView ->
+//            val popupMenu =
+//                PopupMenu(this, anchorView)
+
             val popupMenu =
-                PopupMenu(this, anchorView)
+                PopupMenu(
+                    this,
+                    anchorView,
+                    Gravity.END
+                )
 
             popupMenu.menuInflater.inflate(
                 R.menu.profile_popup_menu,
                 popupMenu.menu
             )
+
+            // Display the logout icon beside the text
+            popupMenu.setForceShowIcon(true)
 
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
@@ -676,13 +688,14 @@ class ListViewActivity :
     }
 
     private fun showLogoutConfirmation() {
-        AlertDialog.Builder(this)
-            .setTitle("Logout")
+        MaterialAlertDialogBuilder(this)
+            .setIcon(R.drawable.outline_logout_24)
+            .setTitle("Log out?")
             .setMessage("Are you sure you want to log out?")
-            .setPositiveButton("Logout") { _, _ ->
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Log out") { _, _ ->
                 logout()
             }
-            .setNegativeButton("Cancel", null)
             .show()
     }
 

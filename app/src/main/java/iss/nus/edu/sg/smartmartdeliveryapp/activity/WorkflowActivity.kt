@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import iss.nus.edu.sg.smartmartdeliveryapp.R
 import iss.nus.edu.sg.smartmartdeliveryapp.api.RetrofitClient
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderRequest
@@ -135,7 +136,8 @@ class WorkflowActivity : AppCompatActivity() {
                         return@setOnClickListener
                     }
 
-                    AlertDialog.Builder(this)
+//                    AlertDialog.Builder(this)
+                    MaterialAlertDialogBuilder(this)
                         .setTitle("Confirm pickup")
                         .setMessage(
                             "Pick up parcel ${trackNo.text.toString()}?"
@@ -162,8 +164,9 @@ class WorkflowActivity : AppCompatActivity() {
                             trackNo.text.toString().trim()
 //                        scanOrder(trackingNo, deliveryPersonId)
 
-                        AlertDialog.Builder(this)
-                            .setTitle("Confirm pickup")
+//                        AlertDialog.Builder(this)
+                    MaterialAlertDialogBuilder(this)
+                            .setTitle("Confirm delivered")
                             .setMessage(
                                 "Delivered parcel ${trackNo.text.toString()}?"
                             )
