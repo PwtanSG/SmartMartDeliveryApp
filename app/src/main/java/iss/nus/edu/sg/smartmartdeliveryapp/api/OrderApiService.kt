@@ -1,11 +1,14 @@
 package iss.nus.edu.sg.smartmartdeliveryapp.api
 
+import iss.nus.edu.sg.smartmartdeliveryapp.model.ConfirmDeliveryRequest
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderRequest
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface OrderApiService {
 
@@ -50,5 +53,11 @@ interface OrderApiService {
 
         @Path("deliveryPersonId")
         deliveryPersonId: Long
+    ): OrderResponse
+
+    @POST("api/orders/{trackingNo}/proof/confirm")
+    suspend fun confirmDeliveryProof(
+        @Path("trackingNo") trackingNo: String,
+        @Body request: ConfirmDeliveryRequest
     ): OrderResponse
 }

@@ -47,4 +47,5 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.google.android.material:material:VERSION")
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
+    implementation("aws.sdk.kotlin:s3:1.3.0")
 }
