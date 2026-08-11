@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,11 +33,15 @@ import iss.nus.edu.sg.smartmartdeliveryapp.model.ConfirmDeliveryRequest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.asRequestBody
 
-private lateinit var barcodeScanner: GmsBarcodeScanner
 
-private lateinit var trackingNo: String
-private var deliveryPhotoFile: File? = null
+
+
 class WorkflowActivity : AppCompatActivity() {
+    private lateinit var btnTakePhoto: Button
+    private lateinit var trackingNo: String
+    private var deliveryPhotoFile: File? = null
+    private lateinit var barcodeScanner: GmsBarcodeScanner
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -77,17 +82,6 @@ class WorkflowActivity : AppCompatActivity() {
             openNavigation(address)
         }
 
-//        btnMap.setOnClickListener {
-//            openNavigation(
-//                "116 Lorong 2 Toa Payoh S310116"
-//            )
-//        }
-
-//        btnMap.setOnClickListener {
-//            showRecipientLocation(
-//                "2 Clementi West Street 2, Singapore 129605"
-//            )
-//        }
         val back_btn = findViewById<Button>(R.id.btnBack)
         back_btn.setBackgroundColor(Color.GRAY)
         back_btn.setOnClickListener {
@@ -97,16 +91,13 @@ class WorkflowActivity : AppCompatActivity() {
 
         btnScan.visibility = View.VISIBLE
 
-        val btnButton = findViewById<Button>(R.id.button)
-        btnButton.visibility = View.GONE
-
         val orderId =
             intent.getLongExtra("ORDER_ID", -1L)
 
         trackingNo =
             intent.getStringExtra("TRACKING_NO") ?: ""
 
-        val btnTakePhoto = findViewById<Button>(R.id.btnTakePhoto)
+        btnTakePhoto = findViewById<Button>(R.id.btnTakePhoto)
 
         val deliveryPersonId =
             intent.getLongExtra(
@@ -119,29 +110,22 @@ class WorkflowActivity : AppCompatActivity() {
 
         val statusName =
             intent.getStringExtra("ORDER_STATUS")
-
-        btnScan.setOnClickListener {
-            scanOrder(trackingNo, deliveryPersonId)
+        if (statusName == "PACKED") {
+            btnScan.text = "Scan > Pick Up"
         }
-
-        btnTakePhoto.visibility = View.VISIBLE
-        btnTakePhoto.setOnClickListener {
-            if (trackingNo != "") {
-                takeDeliveryPhoto()
-            } else {
-                Log.e("", "No Tracking No.")
-                Toast.makeText(this, "No trackingNo", Toast.LENGTH_SHORT).show()
-            }
+        if (statusName == "PICKED_UP") {
+            btnScan.text = "Scan > Delivered"
         }
+        Toast.makeText(this, "Status: ${statusName}", Toast.LENGTH_SHORT).show()
 
-        val btn = findViewById<Button>(R.id.button)
         when (statusName) {
             OrderStatus.PACKED.name -> {
-                btn.text = "PICK UP"
-                btn.isEnabled = true
-                btn.setOnClickListener {
+                btnScan.text = "Scan > Pick Up"
+                btnScan.isEnabled = true
+                btnScan.visibility = View.VISIBLE
+                btnScan.setOnClickListener {
                     // Start barcode scanner
-                    val trackingNo =
+                    trackingNo =
                         trackNo.text.toString().trim()
 
                     if (trackingNo.isBlank()) {
@@ -151,62 +135,60 @@ class WorkflowActivity : AppCompatActivity() {
                         return@setOnClickListener
                     }
 
-//                    AlertDialog.Builder(this)
-                    MaterialAlertDialogBuilder(this)
-                        .setTitle("Confirm pickup")
-                        .setMessage(
-                            "Pick up parcel ${trackNo.text.toString()}?"
+                    Log.d("BARCODE_SCAN", "Scan button pressed")
+                    Log.d(
+                            "BARCODE_SCAN",
+                            "Button clicked, status=$statusName"
                         )
-                        .setPositiveButton("Confirm") { _, _ ->
-                            pickupOrder(
-                                scannedTrackingNo_ =
-                                    trackNo.text.toString(),
-                                deliveryPersonId_ =
-                                    deliveryPersonId
-                            )
-                        }
-                        .setNegativeButton("Cancel", null)
-                        .show()
+
+                    scanOrder(
+                        expectedTrackingNo = trackingNo,
+                        deliveryPersonId = deliveryPersonId,
+                        statusName = statusName
+                    )
                 }
             }
 
             OrderStatus.PICKED_UP.name -> {
-                btn.text = "Mark as DELIVERED"
-                btn.isEnabled = true
-                btn.setOnClickListener {
-                    // Take delivery photo
-                    val trackingNo =
+                btnScan.text = "Scan > Delivered"
+                btnScan.isEnabled = true
+
+                Log.d("BARCODE_SCAN", "Scan button pressed")
+                Log.d(
+                    "BARCODE_SCAN",
+                    "Button clicked, status=$statusName"
+                )
+                btnScan.setOnClickListener {
+                    // Start barcode scanner
+                    trackingNo =
                         trackNo.text.toString().trim()
-//                        scanOrder(trackingNo, deliveryPersonId)
 
-//                        AlertDialog.Builder(this)
-                    MaterialAlertDialogBuilder(this)
-                        .setTitle("Confirm delivered")
-                        .setMessage(
-                            "Delivered parcel ${trackNo.text.toString()}?"
-                        )
-                        .setPositiveButton("Confirm") { _, _ ->
-                            deliveredOrder(
-                                scannedTrackingNo_ =
-                                    trackNo.text.toString(),
-                                deliveryPersonId_ =
-                                    deliveryPersonId
-                            )
-                        }
-                        .setNegativeButton("Cancel", null)
-                        .show()
+                    if (trackingNo.isBlank()) {
+                        trackNo.error =
+                            "Tracking number is required"
 
+                        return@setOnClickListener
+                    }
+
+                    Log.d("BARCODE_SCAN", "Scan button pressed")
+
+                    scanOrder(
+                        expectedTrackingNo = trackingNo,
+                        deliveryPersonId = deliveryPersonId,
+                        statusName = statusName
+                    )
                 }
+
             }
 
             OrderStatus.DELIVERED.name -> {
-                btn.text = "Delivered"
-                btn.isEnabled = false
-                btn.setBackgroundColor(Color.GRAY)
+                btnScan.text = "Delivered"
+                btnScan.isEnabled = false
+                btnScan.setBackgroundColor(Color.GRAY)
             }
 
             else -> {
-                btn.visibility = View.GONE
+                btnScan.visibility = View.GONE
             }
         }
     }
@@ -228,7 +210,7 @@ class WorkflowActivity : AppCompatActivity() {
                 Toast.makeText(
                     this@WorkflowActivity,
                     "${updatedOrder.trackingNo} picked up",
-                    Toast.LENGTH_SHORT
+                    Toast.LENGTH_LONG
                 ).show()
 
                 finish()
@@ -333,7 +315,8 @@ class WorkflowActivity : AppCompatActivity() {
 
     private fun scanOrder(
         expectedTrackingNo: String,
-        deliveryPersonId: Long
+        deliveryPersonId: Long,
+        statusName: String
     ) {
         barcodeScanner.startScan()
             .addOnSuccessListener { barcode ->
@@ -344,7 +327,7 @@ class WorkflowActivity : AppCompatActivity() {
                     Toast.makeText(
                         this,
                         "Invalid barcode",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_LONG
                     ).show()
 
                     return@addOnSuccessListener
@@ -370,9 +353,27 @@ class WorkflowActivity : AppCompatActivity() {
                 val btnScan = findViewById<Button>(R.id.btnScan)
                 btnScan.visibility = View.GONE
 
-                val btnButton = findViewById<Button>(R.id.button)
-                btnButton.visibility = View.VISIBLE
+                if (statusName == OrderStatus.PACKED.name) {
+                    showPickupConfirmation(expectedTrackingNo, deliveryPersonId)
+                }
 
+                if (statusName == OrderStatus.PICKED_UP.name) {
+//                    val btnTakePhoto = findViewById<Button>(R.id.btnTakePhoto)
+
+                    if (statusName == OrderStatus.PICKED_UP.name) {
+                        btnTakePhoto.visibility = View.VISIBLE
+                        btnTakePhoto.setOnClickListener {
+                            if (trackingNo != "") {
+                                takeDeliveryPhoto()
+                            } else {
+                                Log.e("", "No Tracking No.")
+                                Toast.makeText(this, "No trackingNo", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } else {
+                        btnTakePhoto.visibility = View.GONE
+                    }
+                }
             }
     }
 
@@ -438,11 +439,7 @@ class WorkflowActivity : AppCompatActivity() {
             val file = deliveryPhotoFile
 
             if (success && file != null) {
-                val trackingNo = null
-                uploadPhoto(
-                    photoFile = file,
-                    // trackingNo = trackingNo
-                )
+                showDeliveryConfirmation(file)
             } else {
                 Toast.makeText(
                     this,
@@ -728,16 +725,31 @@ class WorkflowActivity : AppCompatActivity() {
         photoFile: File
     ) {
         lifecycleScope.launch {
+            showLoading(true)
             try {
                 // Request presigned upload URL
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 1: Request presigned URL"
+                )
+
                 val uploadDetails =
                     UploadApiClient.uploadApi
                         .createUploadUrl()
+
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 1 OK: ${uploadDetails.fileKey}"
+                )
 
                 val imageBody =
                     photoFile.asRequestBody(
                         "image/jpeg".toMediaType()
                     )
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 2: Upload to S3"
+                )
 
                 // Upload photo to S3
                 val uploadResponse =
@@ -748,6 +760,15 @@ class WorkflowActivity : AppCompatActivity() {
                             imageBody = imageBody
                         )
 
+
+                val s3Error =
+                    uploadResponse.errorBody()?.string()
+
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 2 response: ${uploadResponse.code()}"
+                )
+
                 if (!uploadResponse.isSuccessful) {
                     throw IOException(
                         "S3 HTTP ${uploadResponse.code()}: " +
@@ -757,6 +778,11 @@ class WorkflowActivity : AppCompatActivity() {
                     )
                 }
 
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 3: Update Spring Boot, " +
+                            "trackingNo=[$trackingNo]"
+                )
                 // Update order through Spring Boot
                 val updatedOrder =
                     RetrofitClient.orderApi
@@ -768,6 +794,10 @@ class WorkflowActivity : AppCompatActivity() {
                                         uploadDetails.fileKey
                                 )
                         )
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 3 OK"
+                )
 
                 Toast.makeText(
                     this@WorkflowActivity,
@@ -820,8 +850,67 @@ class WorkflowActivity : AppCompatActivity() {
                     "Delivery failed: ${e.message}",
                     Toast.LENGTH_LONG
                 ).show()
+            } finally {
+                showLoading(false)
             }
         }
+    }
+
+    private fun showPickupConfirmation(
+        scannedTrackingNo: String,
+        deliveryPersonId: Long
+    ) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Confirm pickup")
+            .setMessage(
+                "Pick up parcel $scannedTrackingNo?"
+            )
+            .setPositiveButton("Confirm") { _, _ ->
+                pickupOrder(
+                    scannedTrackingNo_ =
+                        scannedTrackingNo,
+                    deliveryPersonId_ =
+                        deliveryPersonId
+                )
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showDeliveryConfirmation(
+//        scannedTrackingNo: String,
+        file: File
+//        deliveryPersonId: Long
+    ) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Confirm delivery")
+            .setMessage(
+                "Mark parcel $trackingNo as delivered?"
+            )
+            .setPositiveButton("Confirm") { _, _ ->
+//                deliveredOrder(
+//                    scannedTrackingNo_ =
+//                        scannedTrackingNo,
+//                    deliveryPersonId_ =
+//                        deliveryPersonId
+//                )
+                uploadPhoto(
+                    photoFile = file,
+                    // trackingNo = trackingNo
+                )
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showLoading(show: Boolean) {
+        val loadingOverlay =
+            findViewById<FrameLayout>(
+                R.id.loadingOverlay
+            )
+
+        loadingOverlay.visibility =
+            if (show) View.VISIBLE else View.GONE
     }
 
 }
