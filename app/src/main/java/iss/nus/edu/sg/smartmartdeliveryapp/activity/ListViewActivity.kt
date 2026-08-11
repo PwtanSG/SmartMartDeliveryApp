@@ -1,6 +1,5 @@
 package iss.nus.edu.sg.smartmartdeliveryapp.activity
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -358,6 +357,14 @@ class ListViewActivity :
             putExtra(
                 "RECIPIENT_ADDRESS",
                 "2 Clementi West Street 2 129605"
+            )
+            putExtra(
+                "DELIVERY_PROOF_KEY",
+                selectedOrder.deliveryProofKey
+            )
+            putExtra(
+                "DELIVERED_AT",
+                selectedOrder.deliveredAt
             )
         }
         startActivity(intent)

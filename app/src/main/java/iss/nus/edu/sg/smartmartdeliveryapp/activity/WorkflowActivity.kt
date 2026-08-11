@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,8 +34,9 @@ import iss.nus.edu.sg.smartmartdeliveryapp.api.UploadApiClient
 import iss.nus.edu.sg.smartmartdeliveryapp.model.ConfirmDeliveryRequest
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.asRequestBody
-
-
+import iss.nus.edu.sg.smartmartdeliveryapp.model.ViewPhotoRequest
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class WorkflowActivity : AppCompatActivity() {
@@ -42,6 +44,10 @@ class WorkflowActivity : AppCompatActivity() {
     private lateinit var trackingNo: String
     private var deliveryPhotoFile: File? = null
     private lateinit var barcodeScanner: GmsBarcodeScanner
+    private var deliveryProofKey: String? = null
+
+    private var deliveredAt: String? = ""
+    private lateinit var tvDeliveredAt: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,11 +98,6 @@ class WorkflowActivity : AppCompatActivity() {
             openNavigation(address)
         }
 
-//        val back_btn = findViewById<Button>(R.id.btnBack)
-//        back_btn.setBackgroundColor(Color.GRAY)
-//        back_btn.setOnClickListener {
-//            startActivity(Intent(this, ListViewActivity::class.java))
-//        }
         val btnScan = findViewById<Button>(R.id.btnScan)
 
         btnScan.visibility = View.VISIBLE
@@ -107,6 +108,12 @@ class WorkflowActivity : AppCompatActivity() {
         trackingNo =
             intent.getStringExtra("TRACKING_NO") ?: ""
 
+        deliveryProofKey = intent.getStringExtra("DELIVERY_PROOF_KEY")
+
+        deliveredAt = intent.getStringExtra("DELIVERED_AT")
+        tvDeliveredAt = findViewById<TextView>(R.id.tvDeliveredAt)
+        tvDeliveredAt.text = formatDateTime(deliveredAt)
+
         btnTakePhoto = findViewById<Button>(R.id.btnTakePhoto)
 
         val deliveryPersonId =
@@ -114,6 +121,8 @@ class WorkflowActivity : AppCompatActivity() {
                 "DELIVERY_PERSON_ID",
                 -1L
             )
+
+        val btnViewProof = findViewById<Button>(R.id.btnViewProof)
 
         val trackNo = findViewById<EditText>(R.id.etTrackingNo)
         trackNo.setText(trackingNo)
@@ -195,6 +204,17 @@ class WorkflowActivity : AppCompatActivity() {
                 btnScan.text = "Delivered"
                 btnScan.isEnabled = false
                 btnScan.setBackgroundColor(Color.GRAY)
+                val btnMap = findViewById<Button>(R.id.btnMap)
+                btnMap.visibility = View.GONE
+                if (!deliveryProofKey.isNullOrBlank()) {
+                    btnViewProof.visibility = View.VISIBLE
+
+                    btnViewProof.setOnClickListener {
+                        openDeliveryProof()
+                    }
+                } else {
+                    btnViewProof.visibility = View.GONE
+                }
             }
 
             else -> {
@@ -484,253 +504,6 @@ class WorkflowActivity : AppCompatActivity() {
         takePhotoLauncher.launch(photoUri)
     }
 
-    private fun uploadPhoto1(
-        photoFile: File
-    ) {
-//        showLoading(true)
-
-        lifecycleScope.launch {
-            try {
-                // POST to API Gateway
-                val uploadDetails =
-                    UploadApiClient.uploadApi
-                        .createUploadUrl()
-
-                val imageBody =
-                    photoFile.asRequestBody(
-                        "image/jpeg".toMediaType()
-                    )
-
-                // PUT directly to S3 using Retrofit
-                val uploadResponse =
-                    UploadApiClient.uploadApi
-                        .uploadPhotoToS3(
-                            uploadUrl =
-                                uploadDetails.uploadUrl,
-
-                            imageBody =
-                                imageBody
-                        )
-
-                if (!uploadResponse.isSuccessful) {
-                    val errorBody =
-                        uploadResponse
-                            .errorBody()
-                            ?.string()
-
-                    Log.e(
-                        "S3_UPLOAD",
-                        "HTTP ${uploadResponse.code()}: " +
-                                errorBody
-                    )
-
-                    throw IOException(
-                        "S3 upload failed: " +
-                                uploadResponse.code()
-                    )
-                }
-
-                Log.d(
-                    "S3_UPLOAD",
-                    "Uploaded: ${uploadDetails.fileKey}"
-                )
-
-                Toast.makeText(
-                    this@WorkflowActivity,
-                    "Delivery photo uploaded",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-//                confirmDelivery(
-//                    uploadDetails.fileKey
-//                )
-            } catch (e: Exception) {
-                Log.e(
-                    "S3_UPLOAD",
-                    "Upload failed: " +
-                            "${e.javaClass.simpleName}: ${e.message}",
-                    e
-                )
-
-                Toast.makeText(
-                    this@WorkflowActivity,
-                    "Upload failed: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-            } finally {
-                //showLoading(false)
-            }
-        }
-    }
-
-    private fun uploadPhoto2(
-        photoFile: File,
-    ) {
-        lifecycleScope.launch {
-            try {
-                Log.d(
-                    "S3_UPLOAD",
-                    "File exists=${photoFile.exists()}, " +
-                            "size=${photoFile.length()}"
-                )
-
-                Log.d(
-                    "S3_UPLOAD",
-                    "Requesting presigned URL"
-                )
-
-                val uploadDetails =
-                    UploadApiClient.uploadApi
-                        .createUploadUrl()
-
-                Log.d(
-                    "S3_UPLOAD",
-                    "Received file key: " +
-                            uploadDetails.fileKey
-                )
-
-                val imageBody =
-                    photoFile.asRequestBody(
-                        "image/jpeg".toMediaType()
-                    )
-
-                Log.d(
-                    "S3_UPLOAD",
-                    "Starting S3 PUT"
-                )
-
-                val uploadResponse =
-                    UploadApiClient.uploadApi
-                        .uploadPhotoToS3(
-                            uploadUrl =
-                                uploadDetails.uploadUrl,
-                            imageBody = imageBody
-                        )
-
-
-                val errorText =
-                    uploadResponse
-                        .errorBody()
-                        ?.string()
-
-                Log.d(
-                    "S3_UPLOAD",
-                    "S3 response=${uploadResponse.code()}"
-                )
-
-                if (!uploadResponse.isSuccessful) {
-                    Log.e(
-                        "S3_UPLOAD",
-                        "S3 error: $errorText"
-                    )
-
-                    throw IOException(
-                        "S3 HTTP ${uploadResponse.code()}"
-                    )
-                }
-
-                // S3 upload succeeded.
-                // Save the permanent S3 file key and mark the order delivered.
-                val updatedOrder =
-                    RetrofitClient.orderApi.confirmDeliveryProof(
-                        trackingNo = trackingNo,
-                        request = ConfirmDeliveryRequest(
-                            fileKey = uploadDetails.fileKey
-                        )
-                    )
-
-                Toast.makeText(
-                    this@WorkflowActivity,
-                    "Photo uploaded successfully",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } catch (e: HttpException) {
-                val errorText =
-                    e.response()
-                        ?.errorBody()
-                        ?.string()
-
-                Log.e(
-                    "S3_UPLOAD",
-                    "API Gateway HTTP ${e.code()}: $errorText",
-                    e
-                )
-            } catch (e: Exception) {
-                Log.e(
-                    "S3_UPLOAD",
-                    "Upload failed: " +
-                            "${e.javaClass.simpleName}: ${e.message}",
-                    e
-                )
-            }
-        }
-    }
-
-    private fun uploadPhoto9(
-        photoFile: File
-    ) {
-        lifecycleScope.launch {
-            try {
-                val uploadDetails =
-                    UploadApiClient.uploadApi
-                        .createUploadUrl()
-
-                val imageBody =
-                    photoFile.asRequestBody(
-                        "image/jpeg".toMediaType()
-                    )
-
-                val uploadResponse =
-                    UploadApiClient.uploadApi
-                        .uploadPhotoToS3(
-                            uploadUrl =
-                                uploadDetails.uploadUrl,
-                            imageBody = imageBody
-                        )
-
-                if (!uploadResponse.isSuccessful) {
-                    throw IOException(
-                        "S3 upload failed: HTTP " +
-                                uploadResponse.code()
-                    )
-                }
-
-                // Uses the WorkflowActivity trackingNo property
-                val updatedOrder =
-                    RetrofitClient.orderApi
-                        .confirmDeliveryProof(
-                            trackingNo = trackingNo,
-                            request =
-                                ConfirmDeliveryRequest(
-                                    fileKey =
-                                        uploadDetails.fileKey
-                                )
-                        )
-
-                Toast.makeText(
-                    this@WorkflowActivity,
-                    "${updatedOrder.trackingNo} delivered successfully",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                finish()
-
-            } catch (e: Exception) {
-                Log.e(
-                    "DELIVERY_PROOF",
-                    "Delivery failed",
-                    e
-                )
-
-                Toast.makeText(
-                    this@WorkflowActivity,
-                    "Delivery failed: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-
     private fun uploadPhoto(
         photoFile: File
     ) {
@@ -921,6 +694,98 @@ class WorkflowActivity : AppCompatActivity() {
 
         loadingOverlay.visibility =
             if (show) View.VISIBLE else View.GONE
+    }
+
+    private fun openDeliveryProof() {
+        val fileKey = deliveryProofKey
+
+        if (fileKey.isNullOrBlank()) {
+            Toast.makeText(
+                this,
+                "Delivery proof is unavailable",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        showLoading(true)
+
+        lifecycleScope.launch {
+            try {
+                val response =
+                    UploadApiClient.uploadApi
+                        .getPhotoViewUrl(
+                            ViewPhotoRequest(
+                                fileKey = fileKey
+                            )
+                        )
+
+                val browserIntent =
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(response.viewUrl)
+                    )
+
+                startActivity(browserIntent)
+
+            } catch (e: HttpException) {
+                val errorBody =
+                    e.response()
+                        ?.errorBody()
+                        ?.string()
+
+                Log.e(
+                    "VIEW_PROOF",
+                    "HTTP ${e.code()}: $errorBody",
+                    e
+                )
+
+                Toast.makeText(
+                    this@WorkflowActivity,
+                    "Unable to retrieve photo: HTTP ${e.code()}",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } catch (e: Exception) {
+                Log.e(
+                    "VIEW_PROOF",
+                    "Unable to view proof",
+                    e
+                )
+
+                Toast.makeText(
+                    this@WorkflowActivity,
+                    "Unable to view proof: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } finally {
+                showLoading(false)
+            }
+        }
+    }
+
+    private fun formatDateTime(
+        value: String?
+    ): String {
+        if (value.isNullOrBlank()) {
+            return "-"
+        }
+
+        return try {
+            val dateTime =
+                LocalDateTime.parse(value)
+
+            val outputFormatter =
+                DateTimeFormatter.ofPattern(
+                    "dd MMM yyyy, h:mm a"
+                )
+
+            dateTime.format(outputFormatter)
+
+        } catch (e: Exception) {
+            value
+        }
     }
 
 }

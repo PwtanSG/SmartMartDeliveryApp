@@ -1,6 +1,8 @@
 package iss.nus.edu.sg.smartmartdeliveryapp.api
 
 import iss.nus.edu.sg.smartmartdeliveryapp.model.UploadUrlResponse
+import iss.nus.edu.sg.smartmartdeliveryapp.model.ViewPhotoRequest
+import iss.nus.edu.sg.smartmartdeliveryapp.model.ViewPhotoResponse
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -23,4 +25,9 @@ interface UploadApiService {
         @Url uploadUrl: String,
         @Body imageBody: RequestBody
     ): Response<Unit>
+
+    @POST("delivery-proof/view-url")
+    suspend fun getPhotoViewUrl(
+        @Body request: ViewPhotoRequest
+    ): ViewPhotoResponse
 }

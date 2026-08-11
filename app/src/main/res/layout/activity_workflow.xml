@@ -18,7 +18,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="80dp"
-            android:padding="24dp">
+            android:paddingTop="5dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
 
             <EditText
                 android:id="@+id/etTrackingNo"
@@ -42,7 +44,7 @@
                 android:id="@+id/tvName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="5dp"
                 android:text="Alice Tay"
                 android:textSize="18sp" />
 
@@ -50,7 +52,7 @@
                 android:id="@+id/tvPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="5dp"
                 android:text="91231234"
                 android:textSize="18sp" />
 
@@ -58,8 +60,16 @@
                 android:id="@+id/tvAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="5dp"
                 android:text="123 Orchard Road S123321"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvDeliveredAt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text=""
                 android:textSize="18sp" />
 
             <Button
@@ -86,19 +96,32 @@
                 android:textSize="18sp" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewProof"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="16dp"
+                android:text="Photo Proof"
+                android:textAllCaps="false"
+                android:textColor="#6A4FB3"
+                android:visibility="gone"
+                app:strokeColor="#6A4FB3"
+                app:strokeWidth="2dp"
+                android:textSize="18sp"/>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMap"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="@android:color/transparent"
                 android:text="Direction"
                 android:textAllCaps="false"
                 android:textColor="#6A4FB3"
-                android:textSize="18sp"
-                app:cornerRadius="16dp"
+                android:visibility="visible"
                 app:strokeColor="#6A4FB3"
-                app:strokeWidth="2dp" />
+                app:strokeWidth="2dp"
+                android:textSize="18sp"/>
 
 <!--            <Button-->
 <!--                android:id="@+id/btnMap"-->
