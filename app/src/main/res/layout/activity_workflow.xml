@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="32dp">
 
     <!-- Normal activity content -->
     <ScrollView
@@ -84,33 +85,62 @@
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMap"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="#6A4FB3"
+                android:backgroundTint="@android:color/transparent"
                 android:text="Direction"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:textColor="#6A4FB3"
+                android:textSize="18sp"
+                app:cornerRadius="16dp"
+                app:strokeColor="#6A4FB3"
+                app:strokeWidth="2dp" />
 
-            <Button
-                android:id="@+id/btnBack"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="24dp"
-                android:backgroundTint="#6A4FB3"
-                android:text="Back"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
+<!--            <Button-->
+<!--                android:id="@+id/btnMap"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="56dp"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:backgroundTint="#6A4FB3"-->
+<!--                android:text="Direction"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="18sp" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/btnBack"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="56dp"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:layout_marginBottom="24dp"-->
+<!--                android:backgroundTint="#6A4FB3"-->
+<!--                android:text="Back"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="18sp" />-->
 
         </LinearLayout>
     </ScrollView>
+    <ImageButton
+        android:id="@+id/btnTopBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="Back"
+        android:elevation="10dp"
+        android:focusable="true"
+        android:padding="8dp"
+        android:src="@drawable/outline_arrow_back_24" />
 
-    <!-- Overlay must be the last child of the root FrameLayout -->
+    <!-- Loading overlay last -->
     <FrameLayout
         android:id="@+id/loadingOverlay"
         android:layout_width="match_parent"
@@ -122,12 +152,11 @@
         android:visibility="gone">
 
         <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
     </FrameLayout>
+
 
 </FrameLayout>

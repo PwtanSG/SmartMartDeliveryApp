@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,6 +48,15 @@ class WorkflowActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_workflow)
 
+        val btnTopBack =
+            findViewById<ImageButton>(
+                R.id.btnTopBack
+            )
+
+        btnTopBack.setOnClickListener {
+            finish()
+        }
+
         val scannerOptions =
             GmsBarcodeScannerOptions.Builder()
                 .setBarcodeFormats(
@@ -82,11 +92,11 @@ class WorkflowActivity : AppCompatActivity() {
             openNavigation(address)
         }
 
-        val back_btn = findViewById<Button>(R.id.btnBack)
-        back_btn.setBackgroundColor(Color.GRAY)
-        back_btn.setOnClickListener {
-            startActivity(Intent(this, ListViewActivity::class.java))
-        }
+//        val back_btn = findViewById<Button>(R.id.btnBack)
+//        back_btn.setBackgroundColor(Color.GRAY)
+//        back_btn.setOnClickListener {
+//            startActivity(Intent(this, ListViewActivity::class.java))
+//        }
         val btnScan = findViewById<Button>(R.id.btnScan)
 
         btnScan.visibility = View.VISIBLE
