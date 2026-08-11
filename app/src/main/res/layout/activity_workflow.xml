@@ -72,25 +72,37 @@
                 android:text=""
                 android:textSize="18sp" />
 
-            <com.google.android.material.button.MaterialButton
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/btnViewProof"-->
+<!--                style="@style/Widget.Material3.Button.OutlinedButton"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="56dp"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:text="Photo Proof"-->
+<!--                android:textAllCaps="false"-->
+<!--                android:textColor="#6A4FB3"-->
+<!--                android:visibility="gone"-->
+<!--                app:strokeColor="#6A4FB3"-->
+<!--                app:strokeWidth="2dp"-->
+<!--                android:textSize="18sp"/>-->
+
+            <Button
                 android:id="@+id/btnViewProof"
-                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="#6A4FB3"
                 android:text="Photo Proof"
-                android:textAllCaps="false"
-                android:textColor="#6A4FB3"
                 android:visibility="gone"
-                app:strokeColor="#6A4FB3"
-                app:strokeWidth="2dp"
-                android:textSize="18sp"/>
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/btnScan"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="18dp"
                 android:backgroundTint="#6A4FB3"
                 android:text="Scan"
                 android:textAllCaps="false"
