@@ -54,12 +54,9 @@ class WorkflowActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_workflow)
 
-        val btnTopBack =
-            findViewById<ImageButton>(
+        findViewById<ImageButton>(
                 R.id.btnTopBack
-            )
-
-        btnTopBack.setOnClickListener {
+            ).setOnClickListener {
             finish()
         }
 
@@ -110,9 +107,47 @@ class WorkflowActivity : AppCompatActivity() {
 
         deliveryProofKey = intent.getStringExtra("DELIVERY_PROOF_KEY")
 
-        deliveredAt = intent.getStringExtra("DELIVERED_AT")
-        tvDeliveredAt = findViewById<TextView>(R.id.tvDeliveredAt)
-        tvDeliveredAt.text = formatDateTime(deliveredAt)
+        val recipientPhone =
+            intent.getStringExtra(
+                "RECIPIENT_PHONE"
+            )?.trim().orEmpty()
+
+        val recipientAddress =
+            intent.getStringExtra(
+                "RECIPIENT_ADDRESS"
+            )?.trim().orEmpty()
+
+        findViewById<View>(R.id.rowPhone).setOnClickListener {
+            if (recipientPhone.isBlank()) {
+                Toast.makeText(
+                    this,
+                    "Phone number is unavailable",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                return@setOnClickListener
+            }
+            startActivity(
+                Intent(
+                    Intent.ACTION_DIAL,
+                    Uri.parse("tel:$recipientPhone")
+                )
+            )
+        }
+
+        findViewById<View>(R.id.rowAddress).setOnClickListener {
+            if (recipientAddress.isBlank()) {
+                Toast.makeText(
+                    this,
+                    "Address is unavailable",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                return@setOnClickListener
+            }
+
+            openNavigation(recipientAddress)
+        }
 
         btnTakePhoto = findViewById<Button>(R.id.btnTakePhoto)
 
@@ -129,13 +164,20 @@ class WorkflowActivity : AppCompatActivity() {
 
         val statusName =
             intent.getStringExtra("ORDER_STATUS")
-        if (statusName == "PACKED") {
+        if (statusName == OrderStatus.PACKED.name) {
             btnScan.text = "Scan > Pick Up"
         }
-        if (statusName == "PICKED_UP") {
+        if (statusName == OrderStatus.PICKED_UP.name) {
             btnScan.text = "Scan > Delivered"
         }
-        Toast.makeText(this, "Status: ${statusName}", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this, "Status: ${statusName}", Toast.LENGTH_SHORT).show()
+        deliveredAt = intent.getStringExtra("DELIVERED_AT")
+        tvDeliveredAt = findViewById<TextView>(R.id.tvDeliveredAt)
+        if (statusName == OrderStatus.DELIVERED.name) {
+            tvDeliveredAt.text = formatDateTime(deliveredAt)
+        } else {
+            tvDeliveredAt.text = "In-progress"
+        }
 
         when (statusName) {
             OrderStatus.PACKED.name -> {
