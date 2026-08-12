@@ -592,21 +592,6 @@ class ListViewActivity :
             }
     }
 
-    private fun scanOrder1() {
-        barcodeScanner.startScan()
-            .addOnSuccessListener { barcode ->
-
-                val trackingNo =
-                    barcode.rawValue?.trim()
-
-                if (trackingNo.isNullOrBlank()) {
-                    return@addOnSuccessListener
-                }
-
-                searchOrder("TRK-2026-0001", 1L)
-            }
-    }
-
     private fun handleScannedOrder(
         trackingNo: String,
         deliveryPersonId_: Long

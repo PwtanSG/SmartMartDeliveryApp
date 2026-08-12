@@ -106,7 +106,7 @@ class OrderAdapter(
                         Color.parseColor("#6A4FB3")
                     )
                 btnStatus.isEnabled = true
-                btnStatus.isClickable = true
+                btnStatus.isClickable = false
             }
 
             OrderStatus.PICKED_UP -> {
@@ -117,7 +117,7 @@ class OrderAdapter(
                         Color.parseColor("#F0A331")
                     )
                 btnStatus.isEnabled = true
-                btnStatus.isClickable = true
+                btnStatus.isClickable = false
             }
 
             OrderStatus.DELIVERED -> {
@@ -137,13 +137,13 @@ class OrderAdapter(
             else -> Unit
         }
 
-        btnStatus.setOnClickListener {
-            Toast.makeText(
-                context,
-                "Btn Pressed ${order.trackingNo} ${order.status}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+//        btnStatus.setOnClickListener {
+//            Toast.makeText(
+//                context,
+//                "Btn Pressed ${order.trackingNo} ${order.status}",
+//                Toast.LENGTH_SHORT
+//            ).show()
+//        }
         return rowView
     }
 }

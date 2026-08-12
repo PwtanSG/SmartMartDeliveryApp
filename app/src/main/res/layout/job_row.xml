@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Author Tan Pang Wee -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:paddingStart="16dp"
@@ -29,38 +29,117 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvRecipentName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:text="Alice Tay"
-            android:textSize="16sp"
-            android:textColor="#666666"
-            android:layout_marginTop="4dp" />
+<!--        <TextView-->
+<!--            android:id="@+id/tvRecipentName"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingLeft="5dp"-->
+<!--            android:text="Alice Tay"-->
+<!--            android:textSize="16sp"-->
+<!--            android:textColor="#666666"-->
+<!--            android:layout_marginTop="4dp" />-->
 
-        <TextView
-            android:id="@+id/tvRecipentPhone"
-            android:layout_width="wrap_content"
+        <!-- Recipient name -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:text="91231234"
-            android:textSize="16sp"
-            android:layout_marginTop="4dp" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingVertical="3dp">
 
-        <TextView
-            android:id="@+id/tvRecipentAddress"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="Recipient name"
+                android:src="@drawable/outline_account_circle_24"
+                app:tint="#6A4FB3" />
+
+            <TextView
+                android:id="@+id/tvRecipentName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:text="Alice Tay"
+                android:textColor="#4A4458"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvRecipentPhone"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingLeft="5dp"-->
+<!--            android:text="91231234"-->
+<!--            android:textSize="16sp"-->
+<!--            android:layout_marginTop="4dp" />-->
+        <!-- Phone-->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:text="123 Woodland Rd #12-12 S123321"
-            android:textSize="16sp"
-            android:layout_marginTop="4dp" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingVertical="3dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="Call recipient"
+                android:src="@drawable/outline_call_24"
+                app:tint="#6A4FB3" />
+
+            <TextView
+                android:id="@+id/tvRecipentPhone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:text="91231234"
+                android:textColor="#6A4FB3"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvRecipentAddress"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingLeft="5dp"-->
+<!--            android:text="123 Woodland Rd #12-12 S123321"-->
+<!--            android:textSize="16sp"-->
+<!--            android:layout_marginTop="4dp" />-->
+        <!-- Address -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingVertical="3dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:contentDescription="Open directions"
+                android:src="@drawable/outline_location_on_24"
+                app:tint="#6A4FB3" />
+
+            <TextView
+                android:id="@+id/tvRecipentAddress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:text="123 Orchard Road S123321"
+                android:textColor="#6A4FB3"
+                android:textSize="18sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
     <Button
         android:id="@+id/btnStatus"
-        android:layout_width="130dp"
+        android:layout_width="120dp"
         android:layout_height="60dp"
         android:backgroundTint="#6A4FB3"
         android:focusable="false"
