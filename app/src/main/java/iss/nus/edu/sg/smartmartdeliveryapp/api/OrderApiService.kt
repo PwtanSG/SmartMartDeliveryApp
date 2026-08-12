@@ -1,6 +1,7 @@
 package iss.nus.edu.sg.smartmartdeliveryapp.api
 
 import iss.nus.edu.sg.smartmartdeliveryapp.model.ConfirmDeliveryRequest
+import iss.nus.edu.sg.smartmartdeliveryapp.model.DeviceTokenRequest
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderRequest
 import iss.nus.edu.sg.smartmartdeliveryapp.model.OrderResponse
 import retrofit2.http.Body
@@ -8,7 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.Response
 
 interface OrderApiService {
 
@@ -60,4 +61,10 @@ interface OrderApiService {
         @Path("trackingNo") trackingNo: String,
         @Body request: ConfirmDeliveryRequest
     ): OrderResponse
+
+    // driver device token registration for firebase
+    @POST("api/device-tokens")
+    suspend fun registerDeviceToken(
+        @Body request: DeviceTokenRequest
+    ): Response<Unit> // means the endpoint returns no response body HTTP 204 No Content
 }

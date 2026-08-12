@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "701583117299",
+    "project_id": "smartmart-delivery",
+    "storage_bucket": "smartmart-delivery.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701583117299:android:b7f083cc6afbb1380c6086",
+        "android_client_info": {
+          "package_name": "iss.nus.edu.sg.smartmartdeliveryapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJCFBifj7ngtKKtYX6nT_fA21oLTX2f6Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

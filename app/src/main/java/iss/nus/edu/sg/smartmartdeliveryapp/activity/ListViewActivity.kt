@@ -2,6 +2,7 @@ package iss.nus.edu.sg.smartmartdeliveryapp.activity
 
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -18,6 +19,7 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -30,6 +32,9 @@ import retrofit2.HttpException
 import java.io.IOException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import android.Manifest
+import com.google.firebase.messaging.FirebaseMessaging
+import iss.nus.edu.sg.smartmartdeliveryapp.model.DeviceTokenRequest
 
 class ListViewActivity :
     AppCompatActivity(),
@@ -58,10 +63,70 @@ class ListViewActivity :
 
     private lateinit var tvCurrentDateTime: TextView
 
+    private val notificationPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { granted ->
+            if (!granted) {
+                Toast.makeText(
+                    this,
+                    "Notifications are disabled",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_list_view)
+
+//        FirebaseMessaging.getInstance().token
+//            .addOnCompleteListener { task ->
+//                if (!task.isSuccessful) {
+//                    Log.e(
+//                        "FCM_TOKEN",
+//                        "Failed to obtain FCM token",
+//                        task.exception
+//                    )
+//                    return@addOnCompleteListener
+//                }
+//
+//                val token = task.result
+//
+//                Log.d("FCM_TOKEN", token)
+//
+//                // Later: send this token together with the
+//                // logged-in deliveryPersonId to Spring Boot.
+//            }
+
+        FirebaseMessaging.getInstance().token
+            .addOnSuccessListener { token ->
+
+                lifecycleScope.launch {
+                    try {
+                        RetrofitClient.orderApi.registerDeviceToken(
+                            DeviceTokenRequest(
+                                deliveryPersonId = 1L,
+                                fcmToken = token
+                            )
+                        )
+
+                        Log.d("FCM_TOKEN", "Token registered")
+                    } catch (e: Exception) {
+                        Log.e("FCM_TOKEN", "Registration failed", e)
+                    }
+                }
+            }
+
+        if (Build.VERSION.SDK_INT >=
+            Build.VERSION_CODES.TIRAMISU
+        ) {
+            notificationPermissionLauncher.launch(
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+        }
 
         dashboardContainer =
             findViewById(R.id.dashboardContainer)

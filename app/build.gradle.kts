@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -47,5 +48,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.google.android.material:material:VERSION")
     implementation("com.google.android.gms:play-services-code-scanner:16.1.0")
-    implementation("aws.sdk.kotlin:s3:1.3.0")
+    implementation(platform("com.google.firebase:firebase-bom:34.17.0"))
+    implementation("com.google.firebase:firebase-messaging")
 }
