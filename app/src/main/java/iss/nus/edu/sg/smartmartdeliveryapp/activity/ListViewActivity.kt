@@ -305,6 +305,9 @@ class ListViewActivity :
                 records.addAll(response)
 
                 orderAdapter.notifyDataSetChanged()
+                listView.post {
+                    listView.setSelection(0)
+                }
 
                 if (completed) {
                     updateBadge(

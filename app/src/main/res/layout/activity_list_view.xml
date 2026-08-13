@@ -1,114 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
-    android:layout_marginTop="10dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <!-- Main content -->
-<!--    <ListView-->
-<!--        android:id="@+id/listView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:paddingTop="20dp"-->
-<!--        android:dividerHeight="1dp"/>-->
+    <!-- Page content -->
     <FrameLayout
-        android:id="@+id/dashboardContainer"
+        android:id="@+id/contentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="30dp"
-        android:visibility="gone">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <include
-            layout="@layout/dashboard_content"
+        <FrameLayout
+            android:id="@+id/dashboardContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:paddingTop="70dp"
+            android:visibility="gone">
+
+            <include
+                layout="@layout/dashboard_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F8F7FB"
+            android:clipToPadding="false"
+            android:dividerHeight="1dp"
+            android:paddingTop="72dp"
+            android:paddingBottom="12dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtViewNoRecords"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="No Record"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/btnAccount"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="20dp"
+            android:background="@android:color/transparent">
+
+            <ImageView
+                android:id="@+id/btnAcc"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:src="@drawable/outline_account_circle_24"
+                app:tint="@color/black" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/loadingOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#20000000"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
 
     </FrameLayout>
-<!--    <com.google.android.material.appbar.MaterialToolbar-->
-<!--        android:id="@+id/topAppBar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="?attr/actionBarSize"-->
-<!--        android:background="#F8F5FC"-->
-<!--        app:title=""-->
-<!--        app:titleTextColor="#342F3E"-->
-<!--        app:menu="@menu/top_app_menu" />-->
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="#F8F7FB"
-        android:clipToPadding="false"
-        android:paddingTop="40dp"
-        android:dividerHeight="1dp"
-        android:paddingBottom="12dp"
-        android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/txtViewNoRecords"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="No Record"
-        android:gravity="center"
-        android:visibility="gone"
-        android:textSize="18sp" />
-
-    <FrameLayout
-        android:id="@+id/btnBack"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_gravity="top|start"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:elevation="20dp"
-        android:background="@android:color/transparent">
-    </FrameLayout>
-    <FrameLayout
-        android:id="@+id/btnAccount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:elevation="20dp"
-        android:background="@android:color/transparent">
-
-        <ImageView
-            android:id="@+id/btnAcc"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_gravity="center"
-            android:src="@drawable/outline_account_circle_24"
-            app:tint="@color/black"
-            android:visibility="visible"
-            android:background="@android:color/transparent"/>
-    </FrameLayout>
-    <!-- Loading overlay -->
-    <FrameLayout
-        android:id="@+id/loadingOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#20000000"
-        android:visibility="gone"
-        android:clickable="true"
-        android:focusable="true">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
-
-    </FrameLayout>
+    <!-- Always below the page content -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
@@ -117,6 +101,6 @@
         app:itemIconTint="#6A4FB3"
         app:itemTextColor="#6A4FB3"
         app:labelVisibilityMode="labeled"
-        android:layout_gravity="bottom"
         app:menu="@menu/order_bottom_menu" />
-</FrameLayout>
+
+</LinearLayout>
