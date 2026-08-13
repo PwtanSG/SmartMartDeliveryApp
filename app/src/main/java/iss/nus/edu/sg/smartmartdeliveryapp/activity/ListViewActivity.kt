@@ -103,19 +103,31 @@ class ListViewActivity :
 
         FirebaseMessaging.getInstance().token
             .addOnSuccessListener { token ->
-
+                Log.d(
+                    "FCM_TOKEN",
+                    "Current token: [$token]"
+                )
                 lifecycleScope.launch {
                     try {
-                        RetrofitClient.orderApi.registerDeviceToken(
+                        val response = RetrofitClient.orderApi.registerDeviceToken(
                             DeviceTokenRequest(
                                 deliveryPersonId = 1L,
                                 fcmToken = token
                             )
                         )
-
                         Log.d("FCM_TOKEN", "Token registered")
+                        Log.d(
+                            "FCM_REGISTER",
+                            "HTTP ${response.code()}, " +
+                                    "success=${response.isSuccessful}"
+                        )
                     } catch (e: Exception) {
                         Log.e("FCM_TOKEN", "Registration failed", e)
+                        Log.e(
+                            "FCM_REGISTER",
+                            "Registration failed",
+                            e
+                        )
                     }
                 }
             }
@@ -425,7 +437,7 @@ class ListViewActivity :
             )
             putExtra(
                 "RECIPIENT_ADDRESS",
-                "2 Clementi West Street 2 129605"
+                selectedOrder.shippingAddress
             )
             putExtra(
                 "DELIVERY_PROOF_KEY",

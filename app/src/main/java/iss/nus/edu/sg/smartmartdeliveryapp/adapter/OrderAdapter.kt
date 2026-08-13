@@ -66,36 +66,9 @@ class OrderAdapter(
         tvTrackingNo.text = order.trackingNo
 
         // Temporary values until they come from the API
-        tvRecipientName.text = "Alice Tay"
-        tvRecipientPhone.text = "91231234"
-        tvRecipientAddress.text =
-            "2 Clementi West Street 2 129605"
-
-//        when (order.status) {
-//            OrderStatus.PACKED -> {
-//                btnStatus.text = "Packed"
-//                btnStatus.isEnabled = true
-//                btnStatus.setBackgroundColor(Color.parseColor("#198754"))
-//            }
-//
-//            OrderStatus.PICKED_UP -> {
-//                btnStatus.text = "Picked Up"
-//                btnStatus.isEnabled = true
-//                btnStatus.setBackgroundColor(Color.parseColor("#FFBF00"))
-//            }
-//
-//            OrderStatus.DELIVERED -> {
-//                btnStatus.text = "Delivered"
-//                btnStatus.isEnabled = false
-//                btnStatus.setBackgroundColor(Color.GRAY)
-//            }
-//
-//            else -> {
-//                btnStatus.text = order.status.name
-//                btnStatus.isEnabled = false
-//                btnStatus.setBackgroundColor(Color.LTGRAY)
-//            }
-//        }
+        tvRecipientName.text = order.firstName + " " + order.lastName
+        tvRecipientPhone.text = order.phoneNumber
+        tvRecipientAddress.text = order.shippingAddress
 
         when (order.status) {
             OrderStatus.PACKED -> {
@@ -136,14 +109,6 @@ class OrderAdapter(
 
             else -> Unit
         }
-
-//        btnStatus.setOnClickListener {
-//            Toast.makeText(
-//                context,
-//                "Btn Pressed ${order.trackingNo} ${order.status}",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
         return rowView
     }
 }
