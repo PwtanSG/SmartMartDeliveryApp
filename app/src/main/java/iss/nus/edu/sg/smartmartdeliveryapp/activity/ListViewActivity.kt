@@ -418,6 +418,8 @@ class ListViewActivity :
             this,
             WorkflowActivity::class.java
         ).apply {
+            putExtra("RECIPENT_FIRST_NAME", selectedOrder.firstName)
+            putExtra("RECIPENT_LAST_NAME", selectedOrder.lastName)
             putExtra("ORDER_ID", selectedOrder.id)
             putExtra(
                 "TRACKING_NO",

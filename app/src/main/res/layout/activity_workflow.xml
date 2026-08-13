@@ -208,20 +208,6 @@
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnMap"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="16dp"
-                android:text="Direction"
-                android:textAllCaps="false"
-                android:textColor="#6A4FB3"
-                android:visibility="visible"
-                app:strokeColor="#6A4FB3"
-                app:strokeWidth="2dp"
-                android:textSize="18sp"/>
-
         </LinearLayout>
     </ScrollView>
     <ImageButton

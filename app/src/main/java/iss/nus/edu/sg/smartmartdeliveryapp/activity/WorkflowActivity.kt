@@ -38,7 +38,6 @@ import iss.nus.edu.sg.smartmartdeliveryapp.model.ViewPhotoRequest
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-
 class WorkflowActivity : AppCompatActivity() {
     private lateinit var btnTakePhoto: Button
     private lateinit var trackingNo: String
@@ -75,26 +74,6 @@ class WorkflowActivity : AppCompatActivity() {
                 scannerOptions
             )
 
-        val btnMap = findViewById<Button>(R.id.btnMap)
-        btnMap.setOnClickListener {
-            val address =
-                intent.getStringExtra(
-                    "RECIPIENT_ADDRESS"
-                ) ?: ""
-
-            if (address.isBlank()) {
-                Toast.makeText(
-                    this,
-                    "Recipient address is missing",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                return@setOnClickListener
-            }
-
-            openNavigation(address)
-        }
-
         val btnScan = findViewById<Button>(R.id.btnScan)
 
         btnScan.visibility = View.VISIBLE
@@ -107,15 +86,26 @@ class WorkflowActivity : AppCompatActivity() {
 
         deliveryProofKey = intent.getStringExtra("DELIVERY_PROOF_KEY")
 
+        val recipent_fname = intent.getStringExtra("RECIPENT_FIRST_NAME")
+        val recipent_lname = intent.getStringExtra("RECIPENT_LAST_NAME")
+        var tvName = findViewById<TextView>(R.id.tvName)
+        tvName.text = recipent_fname + " " + recipent_lname
+
         val recipientPhone =
             intent.getStringExtra(
                 "RECIPIENT_PHONE"
             )?.trim().orEmpty()
 
+        val tvPhone = findViewById<TextView>(R.id.tvPhone)
+        tvPhone.text = recipientPhone
+
         val recipientAddress =
             intent.getStringExtra(
                 "RECIPIENT_ADDRESS"
             )?.trim().orEmpty()
+
+        val tvAddress = findViewById<TextView>(R.id.tvAddress)
+        tvAddress.text = recipientAddress
 
         findViewById<View>(R.id.rowPhone).setOnClickListener {
             if (recipientPhone.isBlank()) {
@@ -246,8 +236,7 @@ class WorkflowActivity : AppCompatActivity() {
                 btnScan.text = "Delivered"
                 btnScan.isEnabled = false
                 btnScan.setBackgroundColor(Color.GRAY)
-                val btnMap = findViewById<Button>(R.id.btnMap)
-                btnMap.visibility = View.GONE
+
                 if (!deliveryProofKey.isNullOrBlank()) {
                     btnViewProof.visibility = View.VISIBLE
 
