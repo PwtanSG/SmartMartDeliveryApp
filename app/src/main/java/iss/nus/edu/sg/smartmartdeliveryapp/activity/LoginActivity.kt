@@ -45,11 +45,11 @@ class LoginActivity : AppCompatActivity() {
         username: String,
         password: String
     ) {
-        Toast.makeText(
-            this,
-            "Username: $username",
-            Toast.LENGTH_SHORT
-        ).show()
+//        Toast.makeText(
+//            this,
+//            "Username: $username",
+//            Toast.LENGTH_SHORT
+//        ).show()
 
         // Call Spring Boot using Retrofit here.
 //        startActivity(Intent(this, ListViewActivity::class.java))

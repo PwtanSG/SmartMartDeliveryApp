@@ -77,6 +77,7 @@ class ListViewActivity :
                 ).show()
             }
         }
+    private var showingCompleted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,25 +90,6 @@ class ListViewActivity :
         )
 
         Toast.makeText(this, "delivery : $deliveryPersonId", Toast.LENGTH_SHORT).show()
-
-//        FirebaseMessaging.getInstance().token
-//            .addOnCompleteListener { task ->
-//                if (!task.isSuccessful) {
-//                    Log.e(
-//                        "FCM_TOKEN",
-//                        "Failed to obtain FCM token",
-//                        task.exception
-//                    )
-//                    return@addOnCompleteListener
-//                }
-//
-//                val token = task.result
-//
-//                Log.d("FCM_TOKEN", token)
-//
-//                // Later: send this token together with the
-//                // logged-in deliveryPersonId to Spring Boot.
-//            }
 
         FirebaseMessaging.getInstance().token
             .addOnSuccessListener { token ->
@@ -254,14 +236,16 @@ class ListViewActivity :
 
             when (menuItem.itemId) {
                 R.id.navInProgress -> {
+                    showingCompleted = false
                     showOrderList()
-                    loadRecords(completed = false)
+                    loadRecords(showingCompleted)
                     true
                 }
 
                 R.id.navCompleted -> {
+                    showingCompleted = true
                     showOrderList()
-                    loadRecords(completed = true)
+                    loadRecords(showingCompleted)
                     true
                 }
 
@@ -418,12 +402,6 @@ class ListViewActivity :
     ) {
         val selectedOrder =
             records[position]
-
-        Toast.makeText(
-            this,
-            "Selected ${selectedOrder.trackingNo} ${selectedOrder.shippingAddress}",
-            Toast.LENGTH_SHORT
-        ).show()
 
         val intent = Intent(
             this,
@@ -711,7 +689,6 @@ class ListViewActivity :
 
     private fun loadDashboard() {
         showLoading(true)
-        Toast.makeText(this, "load dashboard", Toast.LENGTH_SHORT).show()
         lifecycleScope.launch {
             try {
                 val counts = coroutineScope {
