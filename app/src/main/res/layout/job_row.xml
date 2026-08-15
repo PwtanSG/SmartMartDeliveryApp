@@ -29,16 +29,6 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/tvRecipentName"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:paddingLeft="5dp"-->
-<!--            android:text="Alice Tay"-->
-<!--            android:textSize="16sp"-->
-<!--            android:textColor="#666666"-->
-<!--            android:layout_marginTop="4dp" />-->
-
         <!-- Recipient name -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,7 +42,7 @@
                 android:layout_height="22dp"
                 android:contentDescription="Recipient name"
                 android:src="@drawable/outline_account_circle_24"
-                app:tint="#6A4FB3" />
+                app:tint="#F0A331" />
 
             <TextView
                 android:id="@+id/tvRecipentName"
@@ -66,14 +56,6 @@
 
         </LinearLayout>
 
-<!--        <TextView-->
-<!--            android:id="@+id/tvRecipentPhone"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:paddingLeft="5dp"-->
-<!--            android:text="91231234"-->
-<!--            android:textSize="16sp"-->
-<!--            android:layout_marginTop="4dp" />-->
         <!-- Phone-->
         <LinearLayout
             android:layout_width="match_parent"
@@ -87,7 +69,7 @@
                 android:layout_height="22dp"
                 android:contentDescription="Call recipient"
                 android:src="@drawable/outline_call_24"
-                app:tint="#6A4FB3" />
+                app:tint="#F0A331" />
 
             <TextView
                 android:id="@+id/tvRecipentPhone"
@@ -101,14 +83,6 @@
 
         </LinearLayout>
 
-<!--        <TextView-->
-<!--            android:id="@+id/tvRecipentAddress"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:paddingLeft="5dp"-->
-<!--            android:text="123 Woodland Rd #12-12 S123321"-->
-<!--            android:textSize="16sp"-->
-<!--            android:layout_marginTop="4dp" />-->
         <!-- Address -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -122,7 +96,7 @@
                 android:layout_height="22dp"
                 android:contentDescription="Open directions"
                 android:src="@drawable/outline_location_on_24"
-                app:tint="#6A4FB3" />
+                app:tint="#F0A331" />
 
             <TextView
                 android:id="@+id/tvRecipentAddress"

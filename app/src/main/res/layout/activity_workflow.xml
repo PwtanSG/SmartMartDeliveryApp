@@ -37,11 +37,11 @@
                 android:paddingVertical="10dp">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:contentDescription="Tracking number"
                     android:src="@drawable/outline_barcode_scanner_24"
-                    app:tint="#6A4FB3" />
+                    app:tint="#000000" />
 
                 <TextView
                     android:id="@+id/tvTrackingNo"
@@ -65,11 +65,11 @@
                 android:paddingVertical="10dp">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:contentDescription="Recipient name"
                     android:src="@drawable/outline_account_circle_24"
-                    app:tint="#6A4FB3" />
+                    app:tint="#F0A331" />
 
                 <TextView
                     android:id="@+id/tvName"
@@ -96,11 +96,11 @@
                 android:paddingVertical="10dp">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:contentDescription="Call recipient"
                     android:src="@drawable/outline_call_24"
-                    app:tint="#6A4FB3" />
+                    app:tint="#F0A331" />
 
                 <TextView
                     android:id="@+id/tvPhone"
@@ -127,11 +127,11 @@
                 android:paddingVertical="10dp">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:contentDescription="Open directions"
                     android:src="@drawable/outline_location_on_24"
-                    app:tint="#6A4FB3" />
+                    app:tint="#F0A331" />
 
                 <TextView
                     android:id="@+id/tvAddress"
@@ -155,11 +155,11 @@
                 android:paddingVertical="10dp">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:contentDescription="Delivered date"
                     android:src="@drawable/outline_delivery_truck_speed_24"
-                    app:tint="#178B57" />
+                    app:tint="#F0A331" />
 
                 <TextView
                     android:id="@+id/tvDeliveredAt"
@@ -168,7 +168,7 @@
                     android:layout_marginStart="14dp"
                     android:layout_weight="1"
                     android:text="18 May 2026, 04:50 PM"
-                    android:textColor="#178B57"
+                    android:textColor="#6A4FB3"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
