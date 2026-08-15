@@ -63,6 +63,8 @@ class ListViewActivity :
 
     private lateinit var tvCurrentDateTime: TextView
 
+    private var deliveryPersonId: Long = -1L
+
     private val notificationPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -76,11 +78,17 @@ class ListViewActivity :
             }
         }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_list_view)
+
+        deliveryPersonId = intent.getLongExtra(
+            "DELIVERY_MAN_ID",
+            -1L
+        )
+
+        Toast.makeText(this, "delivery : $deliveryPersonId", Toast.LENGTH_SHORT).show()
 
 //        FirebaseMessaging.getInstance().token
 //            .addOnCompleteListener { task ->
@@ -111,7 +119,7 @@ class ListViewActivity :
                     try {
                         val response = RetrofitClient.orderApi.registerDeviceToken(
                             DeviceTokenRequest(
-                                deliveryPersonId = 1L,
+                                deliveryPersonId = deliveryPersonId,
                                 fcmToken = token
                             )
                         )
@@ -291,10 +299,10 @@ class ListViewActivity :
                 val response =
                     if (completed) {
                         RetrofitClient.orderApi
-                            .getCompletedOrders(1L)
+                            .getCompletedOrders(deliveryPersonId)
                     } else {
                         RetrofitClient.orderApi
-                            .getInProgressOrders(1L)
+                            .getInProgressOrders(deliveryPersonId)
                     }
 
                 Log.d(
@@ -371,7 +379,7 @@ class ListViewActivity :
 
                 Toast.makeText(
                     this@ListViewActivity,
-                    "Cannot connect to Spring Boot",
+                    "Cannot connect to Spring Boot here",
                     Toast.LENGTH_SHORT
                 ).show()
             } catch (e: Exception) {
@@ -413,7 +421,7 @@ class ListViewActivity :
 
         Toast.makeText(
             this,
-            "Selected ${selectedOrder.trackingNo}",
+            "Selected ${selectedOrder.trackingNo} ${selectedOrder.shippingAddress}",
             Toast.LENGTH_SHORT
         ).show()
 
@@ -421,6 +429,7 @@ class ListViewActivity :
             this,
             WorkflowActivity::class.java
         ).apply {
+            putExtra("DELIVERY_MAN_ID", deliveryPersonId)
             putExtra("RECIPENT_FIRST_NAME", selectedOrder.firstName)
             putExtra("RECIPENT_LAST_NAME", selectedOrder.lastName)
             putExtra("ORDER_ID", selectedOrder.id)
@@ -434,7 +443,7 @@ class ListViewActivity :
             )
             putExtra(
                 "RECIPIENT_PHONE",
-                "+6591233211"
+                selectedOrder.phoneNumber
             )
             putExtra(
                 "ORDER_STATUS",
@@ -510,11 +519,11 @@ class ListViewActivity :
             try {
                 val inProgressOrders =
                     RetrofitClient.orderApi
-                        .getInProgressOrders(1L)
+                        .getInProgressOrders(deliveryPersonId)
 
                 val completedOrders =
                     RetrofitClient.orderApi
-                        .getCompletedOrders(1L)
+                        .getCompletedOrders(deliveryPersonId)
 
                 updateBadge(
                     R.id.navInProgress,
@@ -656,7 +665,7 @@ class ListViewActivity :
                     "Searching Tracking No : ${trackingNo}",
                     Toast.LENGTH_LONG
                 ).show()
-                searchOrder(trackingNo, 1L)
+                searchOrder(trackingNo, deliveryPersonId)
             }
             .addOnCanceledListener {
                 Toast.makeText(
@@ -680,7 +689,7 @@ class ListViewActivity :
     ) {
         searchOrder(
             trackingNo = trackingNo,
-            deliveryPersonId = 1L
+            deliveryPersonId = deliveryPersonId
         )
     }
 
@@ -702,18 +711,18 @@ class ListViewActivity :
 
     private fun loadDashboard() {
         showLoading(true)
-
+        Toast.makeText(this, "load dashboard", Toast.LENGTH_SHORT).show()
         lifecycleScope.launch {
             try {
                 val counts = coroutineScope {
                     val inProgressRequest = async {
                         RetrofitClient.orderApi
-                            .getInProgressOrders(1L)
+                            .getInProgressOrders(deliveryPersonId)
                     }
 
                     val completedRequest = async {
                         RetrofitClient.orderApi
-                            .getCompletedOrders(1L)
+                            .getCompletedOrders(deliveryPersonId)
                     }
 
                     Pair(
@@ -736,18 +745,48 @@ class ListViewActivity :
                     completed = completedCount
                 )
                 displayCurrentDateTime()
-            } catch (e: Exception) {
+            } catch (e: retrofit2.HttpException) {
+                val errorBody =
+                    e.response()?.errorBody()?.string()
+
                 Log.e(
                     "DASHBOARD_API",
-                    "Failed to load dashboard",
+                    "HTTP ${e.code()}: $errorBody",
                     e
                 )
 
                 Toast.makeText(
                     this@ListViewActivity,
-                    "Unable to load dashboard",
-                    Toast.LENGTH_SHORT
+                    "API error ${e.code()}",
+                    Toast.LENGTH_LONG
                 ).show()
+
+            } catch (e: java.io.IOException) {
+                Log.e(
+                    "DASHBOARD_API",
+                    "Network error",
+                    e
+                )
+
+                Toast.makeText(
+                    this@ListViewActivity,
+                    "Cannot connect to server",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } catch (e: Exception) {
+                Log.e(
+                    "DASHBOARD_API",
+                    "Unexpected error: ${e.message}",
+                    e
+                )
+
+                Toast.makeText(
+                    this@ListViewActivity,
+                    e.message ?: "Unable to load dashboard",
+                    Toast.LENGTH_LONG
+                ).show()
+
             } finally {
                 showLoading(false)
             }

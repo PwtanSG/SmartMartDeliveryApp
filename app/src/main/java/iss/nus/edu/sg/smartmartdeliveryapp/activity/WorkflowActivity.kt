@@ -83,6 +83,7 @@ class WorkflowActivity : AppCompatActivity() {
 
         trackingNo =
             intent.getStringExtra("TRACKING_NO") ?: ""
+        Toast.makeText(this, "test tno:" + trackingNo, Toast.LENGTH_SHORT).show()
 
         deliveryProofKey = intent.getStringExtra("DELIVERY_PROOF_KEY")
 
@@ -151,6 +152,9 @@ class WorkflowActivity : AppCompatActivity() {
 
         val trackNo = findViewById<EditText>(R.id.etTrackingNo)
         trackNo.setText(trackingNo)
+
+        var trackingNoTv = findViewById<TextView>(R.id.tvTrackingNo)
+        trackingNoTv.text = trackingNo
 
         val statusName =
             intent.getStringExtra("ORDER_STATUS")

@@ -52,6 +52,14 @@ class LoginActivity : AppCompatActivity() {
         ).show()
 
         // Call Spring Boot using Retrofit here.
-        startActivity(Intent(this, ListViewActivity::class.java))
+//        startActivity(Intent(this, ListViewActivity::class.java))
+        val intent = Intent(
+            this,
+            ListViewActivity::class.java
+        ).apply {
+            putExtra("RECIPENT_FIRST_NAME", username)
+            putExtra("DELIVERY_MAN_ID", 7L)
+        }
+        startActivity(intent)
     }
 }
