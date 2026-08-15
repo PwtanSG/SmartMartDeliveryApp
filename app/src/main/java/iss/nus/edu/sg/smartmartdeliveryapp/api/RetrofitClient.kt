@@ -1,5 +1,6 @@
 package iss.nus.edu.sg.smartmartdeliveryapp.api
 
+import iss.nus.edu.sg.smartmartdeliveryapp.utils.TokenManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,8 +17,29 @@ object RetrofitClient {
                 HttpLoggingInterceptor.Level.BODY
         }
 
+    private val authInterceptor = okhttp3.Interceptor { chain ->
+
+        val originalRequest = chain.request()
+
+        val requestBuilder =
+            originalRequest.newBuilder()
+
+        val token = TokenManager.getToken()
+
+        if (!token.isNullOrBlank()) {
+            requestBuilder.addHeader(
+                "Authorization",
+                "Bearer $token"
+            )
+        }
+
+        chain.proceed(
+            requestBuilder.build()
+        )
+    }
     private val okHttpClient =
         OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .build()
 
@@ -32,4 +54,8 @@ object RetrofitClient {
 
     val orderApi: OrderApiService =
         retrofit.create(OrderApiService::class.java)
+
+    val apiService: ApiService =
+        retrofit.create(ApiService::class.java)
+
 }

@@ -93,10 +93,7 @@ class ListViewActivity :
 
         FirebaseMessaging.getInstance().token
             .addOnSuccessListener { token ->
-                Log.d(
-                    "FCM_TOKEN",
-                    "Current token: [$token]"
-                )
+
                 lifecycleScope.launch {
                     try {
                         val response = RetrofitClient.orderApi.registerDeviceToken(
@@ -105,12 +102,7 @@ class ListViewActivity :
                                 fcmToken = token
                             )
                         )
-                        Log.d("FCM_TOKEN", "Token registered")
-                        Log.d(
-                            "FCM_REGISTER",
-                            "HTTP ${response.code()}, " +
-                                    "success=${response.isSuccessful}"
-                        )
+
                     } catch (e: Exception) {
                         Log.e("FCM_TOKEN", "Registration failed", e)
                         Log.e(
@@ -155,8 +147,6 @@ class ListViewActivity :
             findViewById<FrameLayout>(R.id.btnAccount)
 
         topRightAccount.setOnClickListener { anchorView ->
-//            val popupMenu =
-//                PopupMenu(this, anchorView)
 
             val popupMenu =
                 PopupMenu(
@@ -289,10 +279,6 @@ class ListViewActivity :
                             .getInProgressOrders(deliveryPersonId)
                     }
 
-                Log.d(
-                    "ORDER_API",
-                    "Received ${response.size} orders: $response"
-                )
                 records.clear()
                 records.addAll(response)
 
@@ -443,12 +429,6 @@ class ListViewActivity :
         startActivity(intent)
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        loadRecords(completed = false)
-//        loadNavigationCounts()
-//    }
-
     override fun onResume() {
         super.onResume()
 
@@ -526,10 +506,7 @@ class ListViewActivity :
         deliveryPersonId: Long
     ) {
         showLoading(true)
-        Log.e(
-            "SEARCH_ORDER",
-            "seach order : ${trackingNo} ${deliveryPersonId}"
-        )
+
         lifecycleScope.launch {
             try {
                 val order =

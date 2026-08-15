@@ -21,11 +21,11 @@
 
     <!-- Username -->
     <EditText
-        android:id="@+id/etUsername"
+        android:id="@+id/etEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username"
-        android:text="alice"
+        android:hint="email"
+        android:text="james@email.com"
         android:inputType="textPersonName"
         android:padding="14dp"
         android:layout_marginBottom="16dp" />
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
-        android:text="password"
+        android:text="abcd1234"
         android:inputType="textPassword"
         android:padding="14dp" />
 
