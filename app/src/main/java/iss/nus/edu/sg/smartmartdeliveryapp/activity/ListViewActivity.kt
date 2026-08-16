@@ -88,7 +88,7 @@ class ListViewActivity :
             "DELIVERY_MAN_ID",
             -1L
         )
-        
+
         FirebaseMessaging.getInstance().token
             .addOnSuccessListener { token ->
 
@@ -254,9 +254,6 @@ class ListViewActivity :
                 else -> false
             }
         }
-
-        // Load API data after views and adapter are ready
-//        loadRecords(completed = false)
     }
 
 
@@ -298,11 +295,11 @@ class ListViewActivity :
                 }
 
                 if (response.isEmpty()) {
-                    Toast.makeText(
-                        this@ListViewActivity,
-                        "No assigned orders found",
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        this@ListViewActivity,
+//                        "No assigned orders found",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
 
                 val tvNoRecords =
@@ -553,11 +550,11 @@ class ListViewActivity :
 
                 } catch (e: HttpException) {
                 if (e.code() == 404) {
-                    Toast.makeText(
-                        this@ListViewActivity,
-                        trackingNo + deliveryPersonId + "Order not found or not assigned to you : " + e.code() + e.message,
-                        Toast.LENGTH_LONG
-                    ).show()
+//                    Toast.makeText(
+//                        this@ListViewActivity,
+//                        trackingNo + deliveryPersonId + "Order not found or not assigned to you : " + e.code() + e.message,
+//                        Toast.LENGTH_LONG
+//                    ).show()
                     val tvtxtViewNoRecords = findViewById<TextView>(R.id.txtViewNoRecords)
                     tvtxtViewNoRecords.visibility = View.VISIBLE
                     tvtxtViewNoRecords.text = "${trackingNo} : \nRecord not found or not assigned to you"

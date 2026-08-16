@@ -15,8 +15,8 @@
         android:layout_height="200dp"
         android:layout_marginTop="1dp"
         android:layout_marginBottom="8dp"
-        android:src="@drawable/smartmart_delivery_logo"
-        android:contentDescription="Wellness Logo"
+        android:src="@drawable/smartcart_delivery_logo"
+        android:contentDescription=" Logo"
         android:scaleType="fitCenter" />
 
     <!-- Username -->
