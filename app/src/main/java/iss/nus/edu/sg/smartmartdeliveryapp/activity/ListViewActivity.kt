@@ -88,9 +88,7 @@ class ListViewActivity :
             "DELIVERY_MAN_ID",
             -1L
         )
-
-        Toast.makeText(this, "delivery : $deliveryPersonId", Toast.LENGTH_SHORT).show()
-
+        
         FirebaseMessaging.getInstance().token
             .addOnSuccessListener { token ->
 

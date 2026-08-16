@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import iss.nus.edu.sg.smartmartdeliveryapp.R
+import iss.nus.edu.sg.smartmartdeliveryapp.activity.RegisterActivity
 import iss.nus.edu.sg.smartmartdeliveryapp.api.RetrofitClient
 import iss.nus.edu.sg.smartmartdeliveryapp.databinding.ActivityLoginBinding
 import iss.nus.edu.sg.smartmartdeliveryapp.model.LoginRequest
@@ -24,6 +25,22 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.tvRegister.setOnClickListener {
+
+            Toast.makeText(
+                this,
+                "Register",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            val intent = Intent(
+                this,
+                RegisterActivity::class.java
+            )
+
+            startActivity(intent)
+        }
 
         binding.btnLogin.setOnClickListener {
             login()
@@ -53,6 +70,10 @@ class LoginActivity : AppCompatActivity() {
             password = password
         )
 
+        // Disable button to prevent double click
+        binding.btnLogin.isEnabled = false
+        binding.btnLogin.text = "Logging in..."
+
         RetrofitClient.apiService
             .login(request)
             .enqueue(object : Callback<LoginResponse> {
@@ -61,7 +82,8 @@ class LoginActivity : AppCompatActivity() {
                     call: Call<LoginResponse>,
                     response: Response<LoginResponse>
                 ) {
-
+                    binding.btnLogin.isEnabled = true
+                    binding.btnLogin.text = "Login"
                     if (!response.isSuccessful) {
                         Toast.makeText(
                             this@LoginActivity,
@@ -123,6 +145,8 @@ class LoginActivity : AppCompatActivity() {
                         "Unable to connect to server",
                         Toast.LENGTH_SHORT
                     ).show()
+                    binding.btnLogin.isEnabled = true
+                    binding.btnLogin.text = "Login"
                 }
             })
     }
