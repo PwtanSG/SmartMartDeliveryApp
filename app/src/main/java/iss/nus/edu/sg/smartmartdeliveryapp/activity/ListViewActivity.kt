@@ -251,6 +251,15 @@ class ListViewActivity :
                     showDashboard()
                     true
                 }
+                R.id.navSupport -> {
+                    startActivity(
+                        Intent(
+                            this,
+                            SupportChatActivity::class.java
+                        )
+                    )
+                    false
+                }
                 else -> false
             }
         }

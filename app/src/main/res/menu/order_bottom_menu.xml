@@ -20,4 +20,9 @@
         android:id="@+id/navSearch"
         android:icon="@drawable/outline_barcode_scanner_24"
         android:title="Search" />
+
+    <item
+        android:id="@+id/navSupport"
+        android:icon="@drawable/outline_support_agent_24"
+        android:title="Support" />
 </menu>
