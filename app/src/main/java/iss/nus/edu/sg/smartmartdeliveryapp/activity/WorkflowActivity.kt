@@ -544,6 +544,178 @@ class WorkflowActivity : AppCompatActivity() {
     ) {
         lifecycleScope.launch {
             showLoading(true)
+
+            try {
+                val currentTrackingNo =
+                    trackingNo.trim()
+
+                if (currentTrackingNo.isBlank()) {
+                    throw IllegalArgumentException(
+                        "Tracking number is missing"
+                    )
+                }
+
+                // STEP 1: Get presigned URL
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 1: Request presigned URL"
+                )
+
+                val uploadDetails =
+                    UploadApiClient.uploadApi
+                        .createUploadUrl()
+
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 1 OK: ${uploadDetails.fileKey}"
+                )
+
+                // STEP 2: Upload photo to S3
+                val imageBody =
+                    photoFile.asRequestBody(
+                        "image/jpeg".toMediaType()
+                    )
+
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 2: Upload to S3"
+                )
+
+                val uploadResponse =
+                    UploadApiClient.uploadApi
+                        .uploadPhotoToS3(
+                            uploadUrl =
+                                uploadDetails.uploadUrl,
+                            imageBody = imageBody
+                        )
+
+                val s3Error =
+                    uploadResponse
+                        .errorBody()
+                        ?.string()
+
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 2 response: ${uploadResponse.code()}"
+                )
+
+                if (!uploadResponse.isSuccessful) {
+                    throw IOException(
+                        "S3 HTTP ${uploadResponse.code()}: " +
+                                "$s3Error"
+                    )
+                }
+
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 2 OK: Photo uploaded to S3"
+                )
+
+                // STEP 3: Save file key in Spring Boot
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 3: Confirm delivery, " +
+                            "trackingNo=[$currentTrackingNo]"
+                )
+
+                val confirmResponse =
+                    RetrofitClient.orderApi
+                        .confirmDeliveryProof(
+                            trackingNo =
+                                currentTrackingNo,
+                            request =
+                                ConfirmDeliveryRequest(
+                                    fileKey =
+                                        uploadDetails.fileKey
+                                )
+                        )
+
+                val confirmError =
+                    confirmResponse
+                        .errorBody()
+                        ?.string()
+
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 3 response: ${confirmResponse.code()}"
+                )
+
+                if (!confirmResponse.isSuccessful) {
+                    throw IOException(
+                        "Spring Boot HTTP " +
+                                "${confirmResponse.code()}: " +
+                                "$confirmError"
+                    )
+                }
+
+                Log.d(
+                    "DELIVERY_PROOF",
+                    "STEP 3 OK: Delivery confirmed"
+                )
+
+                Toast.makeText(
+                    this@WorkflowActivity,
+                    "$currentTrackingNo delivered successfully",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                finish()
+
+            } catch (e: HttpException) {
+                val errorBody =
+                    e.response()
+                        ?.errorBody()
+                        ?.string()
+
+                Log.e(
+                    "DELIVERY_PROOF",
+                    "API HTTP ${e.code()}: $errorBody",
+                    e
+                )
+
+                Toast.makeText(
+                    this@WorkflowActivity,
+                    "API error ${e.code()}: $errorBody",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } catch (e: IOException) {
+                Log.e(
+                    "DELIVERY_PROOF",
+                    "Network/API error: ${e.message}",
+                    e
+                )
+
+                Toast.makeText(
+                    this@WorkflowActivity,
+                    e.message ?: "Delivery confirmation failed",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } catch (e: Exception) {
+                Log.e(
+                    "DELIVERY_PROOF",
+                    "Unexpected error: ${e.message}",
+                    e
+                )
+
+                Toast.makeText(
+                    this@WorkflowActivity,
+                    "Delivery failed: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+
+            } finally {
+                showLoading(false)
+            }
+        }
+    }
+
+    private fun uploadPhoto0(
+        photoFile: File
+    ) {
+        lifecycleScope.launch {
+            showLoading(true)
             try {
                 // Request presigned upload URL
                 Log.d(
@@ -619,7 +791,7 @@ class WorkflowActivity : AppCompatActivity() {
 
                 Toast.makeText(
                     this@WorkflowActivity,
-                    "${updatedOrder.trackingNo} delivered successfully",
+                    "delivered successfully",
                     Toast.LENGTH_SHORT
                 ).show()
 

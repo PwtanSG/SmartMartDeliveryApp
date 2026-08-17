@@ -60,15 +60,25 @@ interface OrderApiService {
         deliveryPersonId: Long
     ): OrderResponse
 
+//    @POST("api/orders/{trackingNo}/proof/confirm")
+//    suspend fun confirmDeliveryProof(
+//        @Path("trackingNo") trackingNo: String,
+//        @Body request: ConfirmDeliveryRequest
+//    ): OrderResponse
+
     @POST("api/orders/{trackingNo}/proof/confirm")
     suspend fun confirmDeliveryProof(
-        @Path("trackingNo") trackingNo: String,
-        @Body request: ConfirmDeliveryRequest
-    ): OrderResponse
+        @Path("trackingNo")
+        trackingNo: String,
+
+        @Body
+        request: ConfirmDeliveryRequest
+    ): Response<Unit>
 
     // driver device token registration for firebase
     @POST("api/device-tokens")
     suspend fun registerDeviceToken(
         @Body request: DeviceTokenRequest
     ): Response<Unit> // means the endpoint returns no response body HTTP 204 No Content
+
 }
