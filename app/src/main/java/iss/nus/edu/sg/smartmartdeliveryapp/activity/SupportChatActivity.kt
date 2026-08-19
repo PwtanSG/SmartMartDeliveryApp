@@ -16,6 +16,7 @@ import iss.nus.edu.sg.smartmartdeliveryapp.model.SupportRequest
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import android.widget.ImageButton
 
 class SupportChatActivity :
     AppCompatActivity() {
@@ -34,6 +35,10 @@ class SupportChatActivity :
         setContentView(
             R.layout.activity_support_chat
         )
+        findViewById<ImageButton>(R.id.btnBack)
+            .setOnClickListener {
+                finish()
+            }
 
         etQuestion =
             findViewById(R.id.etQuestion)
