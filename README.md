@@ -118,6 +118,9 @@ After login, the application registers its latest FCM device token with the Spri
 - Running SmartMart Spring Boot backend
 - Firebase configuration file: `google-services.json`
 
+## Application screenshoot
+![SmartCart Delivery App Screenshots](https://pwt-bucket-s3.s3.us-east-1.amazonaws.com/delivery-app-screen-shoot.png)
+
 ## Application demo video
 [![SmartCart Delivery App Demo](https://pwt-bucket-s3.s3.us-east-1.amazonaws.com/SmartCart-delivery-app.png)](https://youtu.be/anqRexRswLU)
 
