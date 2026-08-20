@@ -164,7 +164,7 @@ Spring Boot backend: <BACKEND_REPOSITORY_URL>
 **Actor:** Merchant
 ## Merchant Order Delivery Management — Web Application
 
-![Merchant Order Delivery Management](https://pwt-bucket-s3.s3.us-east-1.amazonaws.com/delivery-app-screen-shoot.png)
+![Merchant Order Delivery Management](https://pwt-bucket-s3.s3.us-east-1.amazonaws.com/Merchant-delivery-web.png)
 
 **Precondition:** The customer has placed and paid for an order. The order status is `PAID`.
 
